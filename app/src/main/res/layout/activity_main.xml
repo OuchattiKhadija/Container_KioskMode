@@ -1,29 +1,27 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center"
-    android:orientation="vertical" >
-    <GridView
-        android:layout_alignParentTop="true"
+    android:orientation="vertical">
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gridApps"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:numColumns="4"
-        android:verticalSpacing="20dp"
-        android:horizontalSpacing="20dp"></GridView>
+        android:layout_height="match_parent"
+        tools:listitem="@layout/grid_app_item"/>
+
     <Button
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="10dp"
         android:ems="10"
-        android:gravity="center"
         android:text="Admins"
         android:textSize="20dp"
         android:textStyle="bold"
-        android:layout_alignParentBottom="true"
         android:onClick="runAdminActivities"/>
 
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
