@@ -34,15 +34,19 @@ public interface AppInfoDao {
     @Query("SELECT * FROM appInfo_table ORDER BY name DESC")
     LiveData<List<AppInfo>> getAllApps();
 
-    @Query("SELECT * FROM appInfo_table WHERE isNormalUserAllowed = 1 ")
+    @Query("SELECT * FROM appInfo_table WHERE isNormalUserAllowed = 1 ORDER BY name ")
     LiveData<List<AppInfo>> getAllGrantedApp();
 
     @Query("DELETE FROM appInfo_table WHERE packageName = :pn")
     void deletePackage(String pn);
 
+    @Query("SELECT * FROM appInfo_table WHERE packageName = :pn")
+    AppInfo getFromPackage(String pn);
+/**
+
     @Query("UPDATE appInfo_table SET isNormalUserAllowed = :itIs WHERE packageName = :pn ")
     void updateApp(boolean itIs , String pn);
-/**
+
     @Query("SELECT * FROM products WHERE productName = :name")
     List<Product> findProduct(String name);
 

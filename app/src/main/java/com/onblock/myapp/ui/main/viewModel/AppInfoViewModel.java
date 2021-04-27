@@ -15,12 +15,13 @@ import java.util.List;
 public class AppInfoViewModel extends AndroidViewModel {
     private AppInfoRepository repository;
     private LiveData<List<AppInfo>> allApps, allGrantedApp;
+    AppInfo appInfo;
 
     public AppInfoViewModel(@NonNull Application application) {
         super(application);
         repository = new AppInfoRepository(application);
         allApps = repository.getAllApps();
-        allGrantedApp = repository.getAllGrantedApp();
+        //allGrantedApp = repository.getAllGrantedApp();
     }
 
     public void insert(AppInfo appInfo) {
@@ -41,6 +42,11 @@ public class AppInfoViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<AppInfo>> getAllGrantedApp() {
-        return allGrantedApp;
+        return repository.getAllGrantedApp();
+    }
+
+
+     public AppInfo getFromPackage(String pn) {
+        return repository.getFromPackage(pn);
     }
 }

@@ -21,6 +21,8 @@ public class AppInfoRepository {
         appInfoDao = database.appInfoDao();
         allApps = appInfoDao.getAllApps();
         allGrantedApps=appInfoDao.getAllGrantedApp();
+        //  appInfo =  appInfoDao.getFromPackage(pn);
+
     }
 
     public void insert(AppInfo appInfo) {
@@ -43,12 +45,13 @@ public class AppInfoRepository {
         return allGrantedApps;
     }
 
-    public void updateApp(boolean itIs,String pn) {
-
+    public AppInfo getFromPackage(String pn) {
+        return appInfoDao.getFromPackage(pn);
     }
 
-
-
+    public void deletePackage(String pn) {
+        appInfoDao.deletePackage(pn);
+    }
 
 
     private static class InsertAppAsyncTask extends AsyncTask<AppInfo, Void, Void> {

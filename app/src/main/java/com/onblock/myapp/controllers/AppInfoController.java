@@ -51,6 +51,7 @@ public class AppInfoController {
         return appInfoList;
     }
 
+
     /**
      * public static ArrayList<AppInfo> getGrantedAppList(Activity a) {
      * for (int i = 0;i < appInfoList.size();i++){

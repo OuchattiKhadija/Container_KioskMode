@@ -31,20 +31,9 @@ import static java.lang.System.out;
 public class AdminListAppAdapter extends RecyclerView.Adapter<AdminListAppAdapter.AdminViewHolder> {
 
     List<AppInfo> apps = new ArrayList();
-    //----------------------
-    Context context;
-    OnItemCheckListener onItemCheckListener;
+    private OnItemClickListener listener;
 
-    public interface OnItemCheckListener {
-        void onItemCheck(AppInfo appInfo);
-        void onItemUncheck(AppInfo appInfo);
-    }
 
-    public AdminListAppAdapter(Context context ,OnItemCheckListener onItemCheckListener) {
-        this.context = context;
-        this.onItemCheckListener = onItemCheckListener;
-    }
-//-------------------------
     @NonNull
     @Override
     public AdminViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -58,31 +47,30 @@ public class AdminListAppAdapter extends RecyclerView.Adapter<AdminListAppAdapte
         final AppInfo currentAppInfo = apps.get(position);
         holder.appName.setText(currentAppInfo.getName());
         holder.appPackage.setText(currentAppInfo.getPackageName());
-        //Bitmap bMap = BitmapFactory.decodeByteArray(currentAppInfo.getIcon(), 0, currentAppInfo.getIcon().length);
         holder.appIcon.setImageDrawable(AppInfoController.bytes2Drawable(currentAppInfo.getIcon()));
-        holder.checked.setChecked(apps.get(position).getIsNormalUserAllowed());
-        holder.checked.setTag(apps.get(position));
-        //holder.cheked.setTag(position);
-        holder.checked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                  //  currentAppInfo.setNormalUserAllowed(true);
-                    //update the app info in DB
-                    onItemCheckListener.onItemCheck(currentAppInfo);
+        /** holder.checked.setChecked(apps.get(position).getIsNormalUserAllowed());
+         holder.checked.setTag(apps.get(position));
+         //holder.cheked.setTag(position);
+         holder.checked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(isChecked){
+        //  currentAppInfo.setNormalUserAllowed(true);
+        //update the app info in DB
+        onItemCheckListener.onItemCheck(currentAppInfo);
 
-                    out.println("lapplication " + currentAppInfo.getName() + "est autorisé " + currentAppInfo.getIsNormalUserAllowed());
-                }else {
-                    //currentAppInfo.setNormalUserAllowed(false);
-                    onItemCheckListener.onItemUncheck(currentAppInfo);
-                    out.println("lapplication " + currentAppInfo.getName() + " not allowed " + currentAppInfo.getIsNormalUserAllowed());
+        out.println("lapplication " + currentAppInfo.getName() + "est autorisé " + currentAppInfo.getIsNormalUserAllowed());
+        }else {
+        //currentAppInfo.setNormalUserAllowed(false);
+        onItemCheckListener.onItemUncheck(currentAppInfo);
+        out.println("lapplication " + currentAppInfo.getName() + " not allowed " + currentAppInfo.getIsNormalUserAllowed());
 
-                }
-            }
-        });
+        }
+        }
+        });**/
 
 
     }
+
     public AppInfo getAppAt(int position) {
         return apps.get(position);
     }
@@ -101,17 +89,53 @@ public class AdminListAppAdapter extends RecyclerView.Adapter<AdminListAppAdapte
     class AdminViewHolder extends RecyclerView.ViewHolder {
         TextView appName, appPackage;
         ImageView appIcon;
-        CheckBox checked;
+        // CheckBox checked;
 
         public AdminViewHolder(@NonNull View itemView) {
             super(itemView);
             appName = itemView.findViewById(R.id.nameApp);
             appPackage = itemView.findViewById(R.id.packageName);
             appIcon = itemView.findViewById(R.id.iconApp);
-            checked = itemView.findViewById(R.id.is_Permit);
-            this.setIsRecyclable(false);
+            //    checked = itemView.findViewById(R.id.is_Permit);
+            //this.setIsRecyclable(false);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //get adapter position of the cerd clicked
+                    int position = getAdapterPosition();
+                    if (listener != null && position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(apps.get(position));
+                    }
+
+                }
+            });
         }
     }
+
+    public interface OnItemClickListener {
+        void onItemClick(AppInfo appInfo);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    /**
+     * //----------------------
+     * Context context;
+     * OnItemCheckListener onItemCheckListener;
+     * <p>
+     * public interface OnItemCheckListener {
+     * void onItemCheck(AppInfo appInfo);
+     * void onItemUncheck(AppInfo appInfo);
+     * }
+     * <p>
+     * public AdminListAppAdapter(Context context ,OnItemCheckListener onItemCheckListener) {
+     * this.context = context;
+     * this.onItemCheckListener = onItemCheckListener;
+     * }
+     **/
+//-------------------------
 
     /**
      * private LiveData<ArrayList<AppInfo>> apps;
