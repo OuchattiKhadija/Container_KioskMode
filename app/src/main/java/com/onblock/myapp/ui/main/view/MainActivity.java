@@ -25,12 +25,23 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView appGrideView;
     AppInfoViewModel appInfoViewModel;
     UserAppAdapter adapter;
+    View main;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        main = findViewById(R.id.mainActivity);
+        main.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(MainActivity.this, "Long-tapped on: ", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, AdminHomeActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
         appGrideView = findViewById(R.id.gridApps);
         adapter = new UserAppAdapter();
         appInfoViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(AppInfoViewModel.class);
