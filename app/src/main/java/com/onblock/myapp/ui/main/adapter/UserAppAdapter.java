@@ -1,6 +1,7 @@
 package com.onblock.myapp.ui.main.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,12 +17,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.onblock.myapp.R;
 import com.onblock.myapp.controllers.AppInfoController;
 import com.onblock.myapp.data.model.AppInfo;
+import com.onblock.myapp.ui.main.view.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserAppAdapter extends RecyclerView.Adapter<UserAppAdapter.UserViewHolder>  {
+public class UserAppAdapter extends RecyclerView.Adapter<UserAppAdapter.UserViewHolder> {
     List<AppInfo> apps = new ArrayList();
+    private UserAppAdapter.OnItemClickListener listener;
+
     @NonNull
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,12 +45,13 @@ public class UserAppAdapter extends RecyclerView.Adapter<UserAppAdapter.UserView
     public int getItemCount() {
         return apps == null ? 0 : apps.size();
     }
+
     public void setGrantedApps(List<AppInfo> apps) {
         this.apps = apps;
         notifyDataSetChanged();
     }
 
-    class UserViewHolder extends RecyclerView.ViewHolder{
+    class UserViewHolder extends RecyclerView.ViewHolder {
         TextView app_name;
         ImageView app_icon;
 
@@ -53,44 +59,23 @@ public class UserAppAdapter extends RecyclerView.Adapter<UserAppAdapter.UserView
             super(itemView);
             app_name = itemView.findViewById(R.id.app_name);
             app_icon = itemView.findViewById(R.id.app_icon);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //get adapter position of the cerd clicked
+                    int position = getAdapterPosition();
+                    if (listener != null && position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(apps.get(position));
+                    }
+                }
+            });
         }
     }
-    /**
-    private LayoutInflater inflater;
-    private ArrayList<AppInfo> allowedApps = new ArrayList<>();
-
-    public UserAppAdapter(Context context,  int resource , ArrayList<AppInfo> objects){
-        super();
-        this.allowedApps = objects;
-        inflater = LayoutInflater.from(context);
+    public interface OnItemClickListener {
+        void onItemClick(AppInfo appInfo);
     }
 
-    @Override
-    public int getCount() {
-        return allowedApps.size();
+    public void setOnItemClickListener(UserAppAdapter.OnItemClickListener listener) {
+        this.listener = listener;
     }
-
-    @Override
-    public Object getItem(int i) {
-        return allowedApps.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        View vi = view;
-        if (view == null)
-            vi = inflater.inflate(R.layout.grid_app_item, null);
-        AppInfo appInfo = allowedApps.get(i);
-        TextView appName = vi.findViewById(R.id.app_name);
-        ImageView appIcon = vi.findViewById(R.id.app_icon);
-       // appIcon.setImageBitmap(appInfo.getIcon());
-        // appIcon.setImageBitmap(Bitmap.createScaledBitmap(AppInfoController.byteToBitmap(appInfo.getIcon()), appIcon.getWidth(), appIcon.getHeight(), false));
-        appName.setText(appInfo.getName());
-        return vi;
-    }**/
 }

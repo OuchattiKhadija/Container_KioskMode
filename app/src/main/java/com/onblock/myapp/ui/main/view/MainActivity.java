@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.onblock.myapp.R;
 import com.onblock.myapp.data.model.AppInfo;
+import com.onblock.myapp.ui.main.adapter.AdminListAppAdapter;
 import com.onblock.myapp.ui.main.adapter.UserAppAdapter;
 import com.onblock.myapp.ui.main.viewModel.AppInfoViewModel;
 
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        main = findViewById(R.id.mainActivity);
+        /**main = findViewById(R.id.mainActivity);
         main.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -41,12 +42,28 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             }
-        });
+        });**/
         appGrideView = findViewById(R.id.gridApps);
         adapter = new UserAppAdapter();
         appInfoViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(AppInfoViewModel.class);
-        Toast.makeText(MainActivity.this, "Apps!", Toast.LENGTH_LONG).show();
+       // Toast.makeText(MainActivity.this, "Apps!", Toast.LENGTH_LONG).show();
         getAllowdedAppList();
+
+        adapter.setOnItemClickListener(new UserAppAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(AppInfo appInfo) {
+                String pn;
+                pn=appInfo.getPackageName();
+                Intent launchIntent =getPackageManager().getLaunchIntentForPackage(pn);
+                if (launchIntent != null) {
+                    startActivity(launchIntent);//null pointer check in case package name was not found
+                }
+                else{
+                    Toast.makeText(MainActivity.this,"Package Not found",Toast.LENGTH_LONG);
+                }
+
+            }
+        });
     }
 
 
@@ -62,23 +79,11 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "No App is Granted!", Toast.LENGTH_LONG).show();
                 } else {
                     adapter.setGrantedApps(appInfos);
-                    Toast.makeText(MainActivity.this," Granted!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(MainActivity.this," Granted!", Toast.LENGTH_LONG).show();
                 }
             }
         });
-        /**
-         ArrayList<AppInfo> allowedAppsList;
-         allowedAppsList= AppInfoController.getGrantedAppList(this);
-         UserAppAdapter adapter = new UserAppAdapter(this, R.layout.grid_app_item, allowedAppsList);
-         appGrideView.setAdapter(adapter);
-         adapter.notifyDataSetChanged();**/
     }
-
-    /**public void setIsGranted(AppInfo appInfo) {
-        appInfo.setNormalUserAllowed(true);
-        appInfoViewModel.update(appInfo);
-
-    }**/
 
     public void runAdminActivities(View view) {
         Intent intent = new Intent(this, AdminHomeActivity.class);
