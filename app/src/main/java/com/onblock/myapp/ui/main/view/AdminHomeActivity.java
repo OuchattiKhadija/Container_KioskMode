@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -129,4 +130,57 @@ public class AdminHomeActivity extends AppCompatActivity {
         out.println("After => The package " + packageName + " is " + appInfo.getIsNormalUserAllowed());
     }
 
+    @Override
+    protected void onDestroy() {
+        updateDb();
+        super.onDestroy();
+
+    }
+
+    @Override
+    protected void onStart() {
+        updateDb();
+        super.onStart();
+    }
+
+    public void updateDb() {
+        List<String> listPacksInDevice, listPacksInDb;
+        listPacksInDevice = AppInfoController.getPackageList(this);
+        //Toast.makeText(AdminHomeActivity.this, "list On Device ", Toast.LENGTH_SHORT).show();
+        listPacksInDb = appInfoViewModel.getAllPackages();
+        //Toast.makeText(AdminHomeActivity.this, "list On Db ", Toast.LENGTH_SHORT).show();
+
+
+        for (String pack : listPacksInDevice) {
+            if (!listPacksInDb.contains(pack)) {
+                out.println("Cete ellement nesxit pas dans la basede donné =>" + pack);
+                //add app to db
+                try {
+                    PackageManager pm = getPackageManager();
+                    PackageInfo pinfo = getPackageManager().getPackageInfo(pack, 0);
+                    ApplicationInfo app = this.getPackageManager().getApplicationInfo(pack, 0);
+                    AppInfo newAppInfo = new AppInfo(
+                            pinfo.packageName,
+                            (String) pm.getApplicationLabel(app),
+                            pinfo.versionName,
+                            pinfo.versionCode,
+                            AppInfoController.drawable2Bytes(pm.getApplicationIcon(pack)),
+                            false);
+
+                    appInfoViewModel.insert(newAppInfo);
+
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+        for (String pack : listPacksInDb) {
+            if (!listPacksInDevice.contains(pack)) {
+                out.println("Cete ellement à été desinstaller =>" + pack);
+                //Remove app from db
+                appInfoViewModel.deletePackage(pack);
+            }
+        }
+    }
 }

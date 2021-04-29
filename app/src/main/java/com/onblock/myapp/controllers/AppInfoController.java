@@ -51,6 +51,19 @@ public class AppInfoController {
         return appInfoList;
     }
 
+    public static List<String> getPackageList(Activity a) {
+        List<String> packList = new ArrayList<>();
+        //  List<ApplicationInfo> packs = a.getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA);
+        @SuppressLint("WrongConstant")
+        List<PackageInfo> packs = a.getPackageManager().getInstalledPackages(PackageManager.COMPONENT_ENABLED_STATE_DEFAULT);
+        // final int size = packs.size();
+        for (PackageInfo pack : packs) {
+            //PackageInfo p = packs.get(i);
+            packList.add(pack.packageName);
+        }
+        return packList;
+    }
+
 
     /**
      * public static ArrayList<AppInfo> getGrantedAppList(Activity a) {
@@ -108,7 +121,7 @@ public class AppInfoController {
     public static Drawable bitmap2Drawable(Bitmap bitmap) {
         @SuppressWarnings("deprecation")
         BitmapDrawable bd = new BitmapDrawable(bitmap);
-        Drawable d = (Drawable) bd;
+        Drawable d = bd;
         return d;
     }
 

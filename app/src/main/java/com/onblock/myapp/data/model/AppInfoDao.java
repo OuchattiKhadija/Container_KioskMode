@@ -42,6 +42,9 @@ public interface AppInfoDao {
 
     @Query("SELECT * FROM appInfo_table WHERE packageName = :pn")
     AppInfo getFromPackage(String pn);
+
+    @Query("SELECT packageName FROM appInfo_table ")
+    List<String> getAllPackages();
 /**
 
     @Query("UPDATE appInfo_table SET isNormalUserAllowed = :itIs WHERE packageName = :pn ")

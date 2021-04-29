@@ -53,6 +53,10 @@ public class AppInfoRepository {
         appInfoDao.deletePackage(pn);
     }
 
+    public List<String> getAllPackages() {
+        return appInfoDao.getAllPackages();
+    }
+
 
     private static class InsertAppAsyncTask extends AsyncTask<AppInfo, Void, Void> {
         private AppInfoDao appInfoDao;

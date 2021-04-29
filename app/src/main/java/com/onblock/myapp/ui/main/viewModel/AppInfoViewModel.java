@@ -46,7 +46,15 @@ public class AppInfoViewModel extends AndroidViewModel {
     }
 
 
-     public AppInfo getFromPackage(String pn) {
+    public AppInfo getFromPackage(String pn) {
         return repository.getFromPackage(pn);
+    }
+
+    public void deletePackage(String pn) {
+        repository.deletePackage(pn);
+    }
+
+    public List<String> getAllPackages() {
+        return repository.getAllPackages();
     }
 }
