@@ -50,24 +50,16 @@ public class AdminListAppAdapter extends RecyclerView.Adapter<AdminListAppAdapte
         holder.appPackage.setText(currentAppInfo.getPackageName());
         holder.appIcon.setImageDrawable(AppInfoController.bytes2Drawable(currentAppInfo.getIcon()));
         holder.checked.setChecked(apps.get(position).getIsNormalUserAllowed());
-         holder.checked.setTag(apps.get(position));
-         //holder.cheked.setTag(position);*
-        /*holder.checked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.checked.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                isChecked = currentAppInfo.getIsNormalUserAllowed();
-                if (isChecked) {
-                   AdminHomeActivity.setifNormalUserAllowed(isChecked,currentAppInfo.getPackageName());
-                    out.println("lapplication " + currentAppInfo.getName() + "est autorisé " + currentAppInfo.getIsNormalUserAllowed());
+            public void onClick(View view) {
+                if (holder.checked.isChecked()) {
+                    AdminHomeActivity.setifNormalUserAllowed(true, currentAppInfo.getPackageName());
                 } else {
-                  AdminHomeActivity.setifNormalUserAllowed(isChecked,currentAppInfo.getPackageName());
-                    out.println("lapplication " + currentAppInfo.getName() + " not allowed " + currentAppInfo.getIsNormalUserAllowed());
-
+                    AdminHomeActivity.setifNormalUserAllowed(false, currentAppInfo.getPackageName());
                 }
             }
-        });**/
-
-
+        });
     }
 
     public AppInfo getAppAt(int position) {

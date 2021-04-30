@@ -34,32 +34,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         /**main = findViewById(R.id.mainActivity);
-        main.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Toast.makeText(MainActivity.this, "Long-tapped on: ", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, AdminHomeActivity.class);
-                startActivity(intent);
-                return true;
-            }
+         main.setOnLongClickListener(new View.OnLongClickListener() {
+        @Override public boolean onLongClick(View view) {
+        Toast.makeText(MainActivity.this, "Long-tapped on: ", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(MainActivity.this, AdminHomeActivity.class);
+        startActivity(intent);
+        return true;
+        }
         });**/
         appGrideView = findViewById(R.id.gridApps);
         adapter = new UserAppAdapter();
         appInfoViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(AppInfoViewModel.class);
-       // Toast.makeText(MainActivity.this, "Apps!", Toast.LENGTH_LONG).show();
+        // Toast.makeText(MainActivity.this, "Apps!", Toast.LENGTH_LONG).show();
         getAllowdedAppList();
 
         adapter.setOnItemClickListener(new UserAppAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(AppInfo appInfo) {
                 String pn;
-                pn=appInfo.getPackageName();
-                Intent launchIntent =getPackageManager().getLaunchIntentForPackage(pn);
+                pn = appInfo.getPackageName();
+                Intent launchIntent = getPackageManager().getLaunchIntentForPackage(pn);
                 if (launchIntent != null) {
                     startActivity(launchIntent);//null pointer check in case package name was not found
-                }
-                else{
-                    Toast.makeText(MainActivity.this,"Package Not found",Toast.LENGTH_LONG);
+                } else {
+                    Toast.makeText(MainActivity.this, "Package Not found", Toast.LENGTH_LONG);
                 }
 
             }

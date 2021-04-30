@@ -71,6 +71,7 @@ public class UserAppAdapter extends RecyclerView.Adapter<UserAppAdapter.UserView
             });
         }
     }
+
     public interface OnItemClickListener {
         void onItemClick(AppInfo appInfo);
     }

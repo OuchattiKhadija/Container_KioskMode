@@ -43,25 +43,11 @@ public class AdminHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_home);
         appListView = findViewById(R.id.appList_view);
-        /**  adapter = new AdminListAppAdapter(this, new AdminListAppAdapter.OnItemCheckListener() {
-        @Override public void onItemCheck(AppInfo appInfo) {
-        appInfo.setNormalUserAllowed(true);
-        appInfoViewModel.update(appInfo);
-        //  out.println("lapplication " + appInfo.getName() + "est autorisé " + appInfo.isNormalUserAllowed());
-        }
 
-        @Override public void onItemUncheck(AppInfo appInfo) {
-        appInfo.setNormalUserAllowed(false);
-        appInfoViewModel.update(appInfo);
-        }
-        });**/
         adapter = new AdminListAppAdapter();
         //appInfoViewModel = ViewModelProviders.of(this).get(AppInfoViewModel.class);
 
         appInfoViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(AppInfoViewModel.class);
-        //appListView.setLayoutManager(new LinearLayoutManager(this));
-        //appListView.setHasFixedSize(true);
-        //appListView.setAdapter(adapter);
 
         boolean mboolean = false;
 
@@ -111,16 +97,6 @@ public class AdminHomeActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * @Override public void onItemCheck(AppInfo appInfo) {
-     * appInfo.setNormalUserAllowed(true);
-     * appInfoViewModel.update(appInfo);
-     * }
-     * @Override public void onItemUncheck(AppInfo appInfo) {
-     * appInfo.setNormalUserAllowed(false);
-     * appInfoViewModel.update(appInfo);
-     * }
-     **/
     public static void setifNormalUserAllowed(Boolean itUserAllowed, String packageName) {
         AppInfo appInfo;
         appInfo = appInfoViewModel.getFromPackage(packageName);
