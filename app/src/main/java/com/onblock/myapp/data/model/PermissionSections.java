@@ -1,6 +1,5 @@
-package com.onblock.myapp.ui.main.view;
+package com.onblock.myapp.data.model;
 
-import com.onblock.myapp.data.model.PermissionDetails;
 
 import java.util.List;
 

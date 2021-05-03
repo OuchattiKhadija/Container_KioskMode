@@ -53,7 +53,6 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
         appListView = findViewById(R.id.appList_view);
 
         adapter = new AdminListAppAdapter();
-        //appInfoViewModel = ViewModelProviders.of(this).get(AppInfoViewModel.class);
 
         appInfoViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(AppInfoViewModel.class);
 
@@ -69,8 +68,6 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
                 appInfoViewModel.insert(app);
                 out.println("app ajouter a la DB " + app.getName());
             }
-            //SetOnAdapterAppList();
-
             settings = getSharedPreferences("PREFS_NAME", 0);
             SharedPreferences.Editor editor = settings.edit();
             editor.putBoolean("FIRST_RUN", true);
@@ -108,10 +105,10 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
     public static void setifNormalUserAllowed(Boolean itUserAllowed, String packageName) {
         AppInfo appInfo;
         appInfo = appInfoViewModel.getFromPackage(packageName);
-       // out.println("Before => The package " + packageName + " is " + appInfo.getIsNormalUserAllowed());
+        // out.println("Before => The package " + packageName + " is " + appInfo.getIsNormalUserAllowed());
         appInfo.setNormalUserAllowed(itUserAllowed);
         appInfoViewModel.update(appInfo);
-       // out.println("After => The package " + packageName + " is " + appInfo.getIsNormalUserAllowed());
+        // out.println("After => The package " + packageName + " is " + appInfo.getIsNormalUserAllowed());
     }
 
     @Override
@@ -130,10 +127,8 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
     public void updateDb() {
         List<String> listPacksInDevice, listPacksInDb;
         listPacksInDevice = AppInfoController.getPackageList(this);
-        //Toast.makeText(AdminHomeActivity.this, "list On Device ", Toast.LENGTH_SHORT).show();
         listPacksInDb = appInfoViewModel.getAllPackages();
         //Toast.makeText(AdminHomeActivity.this, "list On Db ", Toast.LENGTH_SHORT).show();
-
 
         for (String pack : listPacksInDevice) {
             if (!listPacksInDb.contains(pack)) {
@@ -171,31 +166,10 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        /**
-         MenuInflater inflater = getMenuInflater();
-         inflater.inflate(R.menu.main_menu, menu);
-         MenuItem searchItem = menu.findItem(R.id.menu_search);
-         SearchView searchView = (SearchView) searchItem.getActionView();
-         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-        @Override public boolean onQueryTextSubmit(String query) {
-        Log.d("newText1",query);
-        return false;
-        }
-        @Override public boolean onQueryTextChange(String newText) {
-        Log.d("newText",newText);
-        adapter.getFilter().filter(newText);
-        return false;
-        }
-        });
-         return true;
-         */
         getMenuInflater().inflate(R.menu.main_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.menu_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-      //  searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-
         searchView.setSubmitButtonEnabled(true);
         searchView.setOnQueryTextListener(this);
 
@@ -219,7 +193,7 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
     }
 
     private void searchDatabase(String query) {
-        String searchQuery = "%"+query+"%";
+        String searchQuery = "%" + query + "%";
 
         appInfoViewModel.getSearchResults(searchQuery).observe(this, new Observer<List<AppInfo>>() {
             @Override
@@ -228,38 +202,5 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
             }
         });
     }
-    /*
-    private SearchView.OnQueryTextListener onQueryTextListener =
-            new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    getDealsFromDb(query);
-                    return true;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    getAppsFromDb(newText);
-                    return true;
-                }
-
-                private void getAppsFromDb(String searchText) {
-                    searchText = "%"+searchText+"%";
-                    appInfoViewModel.getSearchResults(DealsSearchActivity.this, searchText)
-                            .observe(DealsSearchActivity.this, new Observer<List<AppInfo>>() {
-                                @Override
-                                public void onChanged(@Nullable List<AppInfo> deals) {
-                                    if (deals == null) {
-                                        return;
-                                    }
-                                    AdminListAppAdapter adapter = new DealsListViewAdapter(
-                                            DealsSearchActivity.this,
-                                            R.layout.deal_item_layout, deals);
-                                    listView.setAdapter(adapter);
-
-                                }
-                            });
-                }
-            };*/
 
 }

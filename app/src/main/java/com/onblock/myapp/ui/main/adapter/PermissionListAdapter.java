@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.onblock.myapp.R;
 import com.onblock.myapp.data.model.PermissionDetails;
-import com.onblock.myapp.ui.main.view.PermissionSections;
+import com.onblock.myapp.data.model.PermissionSections;
 
 import java.util.List;
 
