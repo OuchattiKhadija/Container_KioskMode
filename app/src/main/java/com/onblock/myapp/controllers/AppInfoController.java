@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PermissionInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -12,13 +13,18 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.onblock.myapp.R;
 import com.onblock.myapp.data.model.AppInfo;
+import com.onblock.myapp.data.model.PermissionDetails;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.System.out;
+import static java.security.AccessController.getContext;
 
 public class AppInfoController {
 
@@ -41,11 +47,6 @@ public class AppInfoController {
                     p.versionName,
                     p.versionCode, AppInfoController.drawable2Bytes((p.applicationInfo.loadIcon(a.getPackageManager()))),
                     false);
-            // appInfo.setName(p.applicationInfo.loadLabel(a.getPackageManager()).toString());
-            // appInfo.setPackageName(p.packageName);
-            // appInfo.setVersionName(p.versionName);
-            // appInfo.setVersionCode(p.versionCode) ;
-            // appInfo.setIcon(p.applicationInfo.loadIcon(a.getPackageManager()));
             appInfoList.add(appInfo);
         }
         return appInfoList;
@@ -65,18 +66,7 @@ public class AppInfoController {
     }
 
 
-    /**
-     * public static ArrayList<AppInfo> getGrantedAppList(Activity a) {
-     * for (int i = 0;i < appInfoList.size();i++){
-     * if (appInfoList.get(i).isNormalUserAllowed()){
-     * garantedAppsList.add(appInfoList.get(i));
-     * }
-     * }
-     * return garantedAppsList;
-     * }
-     **/
-
-//Start======================Convert icon from drawable to byte array====================================
+    //Start======================Convert icon from drawable to byte array====================================
     public static byte[] drawable2Bytes(Drawable d) {
         Bitmap bitmap = drawable2Bitmap(d);
         return bitmap2Bytes(bitmap);
@@ -126,6 +116,7 @@ public class AppInfoController {
     }
 
     //End======================Convert icon from byte array to drawable=====================================
+
 
 
 }

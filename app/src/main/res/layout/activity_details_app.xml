@@ -7,19 +7,13 @@
     android:orientation="vertical"
     tools:context=".ui.main.view.DetailsAppActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/appDetails_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/permission_item" />
-
     <androidx.cardview.widget.CardView
         android:id="@+id/header_view"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="0dp"
         app:cardElevation="0.5dp"
-        app:layout_constraintBottom_toTopOf="@+id/permission_list"
+        app:layout_constraintBottom_toTopOf="@+id/txtSectionGranted"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -72,64 +66,54 @@
                 app:layout_constraintLeft_toLeftOf="@+id/app_name"
                 app:layout_constraintTop_toBottomOf="@+id/package_string" />
 
-            <TextView
-                android:id="@+id/open_app"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="Open"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/app_details"
-                app:layout_constraintTop_toBottomOf="@+id/app_picture" />
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@+id/detail_label">
 
-            <TextView
-                android:id="@+id/app_details"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="setting"
-                app:layout_constraintLeft_toRightOf="@+id/open_app"
-                app:layout_constraintRight_toLeftOf="@+id/extract_apk"
-                app:layout_constraintTop_toBottomOf="@+id/app_picture" />
+                <TextView
+                    android:id="@+id/open_app"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Open" />
 
-            <TextView
-                android:id="@+id/extract_apk"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="uninstall"
-                app:layout_constraintLeft_toRightOf="@+id/app_details"
-                app:layout_constraintRight_toLeftOf="@+id/app_uninstall"
-                app:layout_constraintTop_toBottomOf="@+id/app_picture" />
+                <TextView
+                    android:id="@+id/app_settings"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Setting" />
 
-            <TextView
-                android:id="@+id/app_uninstall"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="uninstall"
-                app:layout_constraintLeft_toRightOf="@+id/extract_apk"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/app_picture" />
+                <TextView
+                    android:id="@+id/app_uninstall"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Uninstall" />
+
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/permission_list"
+        android:id="@+id/perm_recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/btns"
@@ -141,26 +125,31 @@
         android:id="@+id/btns"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
 
         <Button
             android:id="@+id/allow_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginRight="10dp"
+            android:layout_margin="20dp"
             android:layout_weight="1"
-            android:text="Allow" />
+            android:background="@color/white"
+            android:text="Allow"
+            android:textColor="@color/limegreen" />
 
         <Button
             android:id="@+id/deny_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_margin="20dp"
             android:layout_weight="1"
-            android:text="Deny" />
+            android:background="@color/white"
+            android:text="Deny"
+            android:textColor="@color/red" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
