@@ -12,12 +12,12 @@ import java.util.List;
 @Dao
 public interface AppInfoDao {
     /**
-     The DAO implements methods to insert, find and delete records from the App database.
-     The insertion method is passed an appInfo entity object containing the data to be stored while
-     the methods to find and delete records are passed a string containing the name of the app on which to perform the operation.
-     The getAllApps() method returns a LiveData object containing all of the records within the database.
-     This method will be used to keep the RecyclerView appInfo list in the user interface layout synchronized with the database.
-    **/
+     * The DAO implements methods to insert, find and delete records from the App database.
+     * The insertion method is passed an appInfo entity object containing the data to be stored while
+     * the methods to find and delete records are passed a string containing the name of the app on which to perform the operation.
+     * The getAllApps() method returns a LiveData object containing all of the records within the database.
+     * This method will be used to keep the RecyclerView appInfo list in the user interface layout synchronized with the database.
+     **/
 
     @Insert
     void insert(AppInfo appInfo);
@@ -45,18 +45,22 @@ public interface AppInfoDao {
 
     @Query("SELECT packageName FROM appInfo_table ")
     List<String> getAllPackages();
-/**
 
-    @Query("UPDATE appInfo_table SET isNormalUserAllowed = :itIs WHERE packageName = :pn ")
-    void updateApp(boolean itIs , String pn);
+    @Query("SELECT * FROM appInfo_table WHERE name LIKE  :str OR  packageName LIKE  :str ")
+    LiveData<List<AppInfo>> getSearchResults(String str);
 
-    @Query("SELECT * FROM products WHERE productName = :name")
-    List<Product> findProduct(String name);
+    /**
 
-    @Query("DELETE FROM products WHERE productName = :name")
-    void deleteProduct(String name);
+     @Query("UPDATE appInfo_table SET isNormalUserAllowed = :itIs WHERE packageName = :pn ")
+     void updateApp(boolean itIs , String pn);
 
-    @Query("SELECT * FROM products")
-    LiveData<List<Product>> getAllProducts();
-    **/
+     @Query("SELECT * FROM products WHERE productName = :name")
+     List<Product> findProduct(String name);
+
+     @Query("DELETE FROM products WHERE productName = :name")
+     void deleteProduct(String name);
+
+     @Query("SELECT * FROM products")
+     LiveData<List<Product>> getAllProducts();
+     **/
 }

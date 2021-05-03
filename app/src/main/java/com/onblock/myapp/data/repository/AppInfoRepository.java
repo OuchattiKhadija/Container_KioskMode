@@ -20,7 +20,7 @@ public class AppInfoRepository {
         AppDb database = AppDb.getDatabaseInstance(application);
         appInfoDao = database.appInfoDao();
         allApps = appInfoDao.getAllApps();
-        allGrantedApps=appInfoDao.getAllGrantedApp();
+        allGrantedApps = appInfoDao.getAllGrantedApp();
         //  appInfo =  appInfoDao.getFromPackage(pn);
 
     }
@@ -55,6 +55,10 @@ public class AppInfoRepository {
 
     public List<String> getAllPackages() {
         return appInfoDao.getAllPackages();
+    }
+
+    public LiveData<List<AppInfo>> getSearchResults(String name) {
+        return appInfoDao.getSearchResults(name);
     }
 
 

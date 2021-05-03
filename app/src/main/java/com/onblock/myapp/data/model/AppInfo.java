@@ -56,15 +56,6 @@ public class AppInfo {
         this.versionCode = versionCode;
     }
 
-    /**
-     * public AppInfo(@NonNull String packageName, String name, boolean isNormalUserAllowed, String versionName) {
-     * this.packageName = packageName;
-     * this.name = name;
-     * this.isNormalUserAllowed = isNormalUserAllowed;
-     * this.versionName = versionName;
-     * }
-     **/
-
 
     //Getter&Setter
     public String getName() {

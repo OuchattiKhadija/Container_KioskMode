@@ -8,10 +8,17 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -31,7 +38,7 @@ import java.util.List;
 
 import static java.lang.System.out;
 
-public class AdminHomeActivity extends AppCompatActivity {
+public class AdminHomeActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     RecyclerView appListView;
     // Create a AppInfoViewModel instance
@@ -42,6 +49,7 @@ public class AdminHomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_home);
+
         appListView = findViewById(R.id.appList_view);
 
         adapter = new AdminListAppAdapter();
@@ -100,10 +108,10 @@ public class AdminHomeActivity extends AppCompatActivity {
     public static void setifNormalUserAllowed(Boolean itUserAllowed, String packageName) {
         AppInfo appInfo;
         appInfo = appInfoViewModel.getFromPackage(packageName);
-        out.println("Before => The package " + packageName + " is " + appInfo.getIsNormalUserAllowed());
+       // out.println("Before => The package " + packageName + " is " + appInfo.getIsNormalUserAllowed());
         appInfo.setNormalUserAllowed(itUserAllowed);
         appInfoViewModel.update(appInfo);
-        out.println("After => The package " + packageName + " is " + appInfo.getIsNormalUserAllowed());
+       // out.println("After => The package " + packageName + " is " + appInfo.getIsNormalUserAllowed());
     }
 
     @Override
@@ -159,4 +167,99 @@ public class AdminHomeActivity extends AppCompatActivity {
             }
         }
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        /**
+         MenuInflater inflater = getMenuInflater();
+         inflater.inflate(R.menu.main_menu, menu);
+         MenuItem searchItem = menu.findItem(R.id.menu_search);
+         SearchView searchView = (SearchView) searchItem.getActionView();
+         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        @Override public boolean onQueryTextSubmit(String query) {
+        Log.d("newText1",query);
+        return false;
+        }
+        @Override public boolean onQueryTextChange(String newText) {
+        Log.d("newText",newText);
+        adapter.getFilter().filter(newText);
+        return false;
+        }
+        });
+         return true;
+         */
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+      //  searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
+
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if (query != null) {
+            searchDatabase(query);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+        if (query != null) {
+            searchDatabase(query);
+        }
+        return true;
+    }
+
+    private void searchDatabase(String query) {
+        String searchQuery = "%"+query+"%";
+
+        appInfoViewModel.getSearchResults(searchQuery).observe(this, new Observer<List<AppInfo>>() {
+            @Override
+            public void onChanged(@Nullable List<AppInfo> appInfos) {
+                adapter.setApps(appInfos);
+            }
+        });
+    }
+    /*
+    private SearchView.OnQueryTextListener onQueryTextListener =
+            new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    getDealsFromDb(query);
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    getAppsFromDb(newText);
+                    return true;
+                }
+
+                private void getAppsFromDb(String searchText) {
+                    searchText = "%"+searchText+"%";
+                    appInfoViewModel.getSearchResults(DealsSearchActivity.this, searchText)
+                            .observe(DealsSearchActivity.this, new Observer<List<AppInfo>>() {
+                                @Override
+                                public void onChanged(@Nullable List<AppInfo> deals) {
+                                    if (deals == null) {
+                                        return;
+                                    }
+                                    AdminListAppAdapter adapter = new DealsListViewAdapter(
+                                            DealsSearchActivity.this,
+                                            R.layout.deal_item_layout, deals);
+                                    listView.setAdapter(adapter);
+
+                                }
+                            });
+                }
+            };*/
+
 }

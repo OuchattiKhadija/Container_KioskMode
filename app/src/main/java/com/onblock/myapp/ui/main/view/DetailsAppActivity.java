@@ -46,7 +46,6 @@ public class DetailsAppActivity extends AppCompatActivity {
     AppInfoViewModel appInfoViewModel;
     ImageView appIcon;
     List<PermissionSections> sectionList = new ArrayList<>();
-    public static List<PermissionDetails> deniedList, grantedList;
     TextView appName, appPackage, openApp, uninstallApp, settingsApp;
     RecyclerView mainRecyclerView;
     PermissionListAdapter adapter;
@@ -89,7 +88,6 @@ public class DetailsAppActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-
         initData();
         //Fil in the recyclerView
         SetOnAdapterPermissionList();
@@ -171,7 +169,7 @@ public class DetailsAppActivity extends AppCompatActivity {
                     PermissionDetails permissionDetails = new PermissionDetails(permissionInfo.name,
                             (packageInfo.requestedPermissionsFlags[i] & packageInfo.REQUESTED_PERMISSION_GRANTED) != 0);
                     allRequstedPermissions.add(permissionDetails);
-                    out.println("La permission " + permissionDetails.getPermissionName() + " Autorisation " + permissionDetails.isGranted());
+                    //out.println("La permission " + permissionDetails.getPermissionName() + " Autorisation " + permissionDetails.isGranted());
 
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();

@@ -25,9 +25,6 @@
         <activity
             android:name=".ui.main.view.AdminHomeActivity"
             android:label="List App">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.main.view.MainActivity" />
         </activity>
         <activity
             android:name=".ui.main.view.MainActivity"

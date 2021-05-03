@@ -57,4 +57,8 @@ public class AppInfoViewModel extends AndroidViewModel {
     public List<String> getAllPackages() {
         return repository.getAllPackages();
     }
+
+    public LiveData<List<AppInfo>> getSearchResults(String name) {
+        return repository.getSearchResults(name);
+    }
 }

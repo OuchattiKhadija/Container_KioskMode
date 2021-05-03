@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -77,6 +79,7 @@ public class AdminListAppAdapter extends RecyclerView.Adapter<AdminListAppAdapte
         notifyDataSetChanged();
     }
 
+
     class AdminViewHolder extends RecyclerView.ViewHolder {
         TextView appName, appPackage;
         ImageView appIcon;
@@ -110,82 +113,7 @@ public class AdminListAppAdapter extends RecyclerView.Adapter<AdminListAppAdapte
         this.listener = listener;
     }
 
-    /**
-     * //----------------------
-     * Context context;
-     * OnItemCheckListener onItemCheckListener;
-     * <p>
-     * public interface OnItemCheckListener {
-     * void onItemCheck(AppInfo appInfo);
-     * void onItemUncheck(AppInfo appInfo);
-     * }
-     * <p>
-     * public AdminListAppAdapter(Context context ,OnItemCheckListener onItemCheckListener) {
-     * this.context = context;
-     * this.onItemCheckListener = onItemCheckListener;
-     * }
-     **/
-//-------------------------
 
-    /**
-     * private LiveData<ArrayList<AppInfo>> apps;
-     * private LayoutInflater inflater;
-     * <p>
-     * <p>
-     * public AdminListAppAdapter(Context context, int resource, LiveData<ArrayList<AppInfo>> objects) {
-     * super(context, resource);
-     * this.apps = objects;
-     * inflater = LayoutInflater.from(context);
-     * }
-     *
-     * @Override public int getCount() {
-     * return apps.size();
-     * }
-     * @Override public AppInfo getItem(int i) {
-     * return apps.get(i);
-     * }
-     * @Override public long getItemId(int i) {
-     * return i;
-     * }
-     * @Override public View getView(int position, View view, ViewGroup viewGroup) {
-     * View vi = view;
-     * if (view == null)
-     * vi = inflater.inflate(R.layout.list_app_item, null);
-     * final AppInfo appInfo = apps.get(position);
-     * TextView appName = vi.findViewById(R.id.nameApp);
-     * TextView appVersion = vi.findViewById(R.id.versionApp);
-     * ImageView appIcon = vi.findViewById(R.id.iconApp);
-     * CheckBox cheked = vi.findViewById(R.id.is_Permit);
-     * cheked.setTag(position);
-     * cheked.setOnCheckedChangeListener(checkListener);
-     * /*  cheked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-     * @Override public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
-     * if (isChecked){
-     * appInfo.setNormalUserAllowed(true);
-     * out.println(appInfo);
-     * }
-     * }
-     * });
-     * appIcon.setImageDrawable(appInfo.getIcon());
-     * appVersion.setText(appInfo.getVersionName());
-     * appName.setText(appInfo.getName());
-     * return vi;
-     * }
-
-
-
-    CompoundButton.OnCheckedChangeListener checkListener = new CompoundButton.OnCheckedChangeListener() {
-    @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-    AppInfo currentApp;
-    int position = (int) buttonView.getTag();
-    currentApp = apps.get(position);
-    //Affichage de longue durée
-    currentApp.setNormalUserAllowed(true);
-
-    out.println("appSelectionner : " + currentApp.getName());
-
-    }
-    };*/
 }
 
 
