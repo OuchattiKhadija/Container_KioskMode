@@ -37,7 +37,7 @@ public class PermissionListAdapter extends RecyclerView.Adapter<PermissionListAd
         holder.sectionNameTV.setText(sectionName);
         ChildPermissionListAdapter childPermissionListAdapter = new ChildPermissionListAdapter(permissionsSection);
         holder.childRecyclerView.setAdapter(childPermissionListAdapter);
-        if (section.getPermissionItems().isEmpty()){
+        if (permissionsSection.isEmpty()){
             holder.noPermission.setText("No "+ section.getSectionName() + " permission found");
         }
     }

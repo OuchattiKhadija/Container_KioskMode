@@ -50,7 +50,8 @@ public class DetailsAppActivity extends AppCompatActivity {
     TextView appName, appPackage, openApp, uninstallApp, settingsApp;
     RecyclerView mainRecyclerView;
     PermissionListAdapter adapter;
-    private String TAG = "DetailsAppActivity";
+    List<PermissionDetails> grantedPermList = new ArrayList<>();
+    List<PermissionDetails> deniedPermList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,17 +80,20 @@ public class DetailsAppActivity extends AppCompatActivity {
 
         headerFunctions();
         initData();
+
         //Fil in the recyclerView
         SetOnAdapterPermissionList();
-
-
-        allowOrDenyApp();
-
-
-        //  getAllRequstedPermissions(EXTRA_APP_PACKAGE);
-
+        btnAllowOrDenyApp();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        initData();
+        //Fil in the recyclerView
+        SetOnAdapterPermissionList();
+    }
 
     public void headerFunctions() {
         //set Methodes onClick Listner header button
@@ -123,7 +127,7 @@ public class DetailsAppActivity extends AppCompatActivity {
         });
     }
 
-    public void allowOrDenyApp() {
+    public void btnAllowOrDenyApp() {
         //set Methodes onClick Listner bottom button
         allowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,7 +183,7 @@ public class DetailsAppActivity extends AppCompatActivity {
     }
 
     public List<PermissionDetails> getDeniedPermList() {
-        List<PermissionDetails> deniedPermList = new ArrayList<>();
+        deniedPermList.clear();
         List<PermissionDetails> allPermission = getAllRequstedPermissions(EXTRA_APP_PACKAGE);
         for (PermissionDetails perm : allPermission) {
             if (perm.isGranted() == false) {
@@ -190,17 +194,18 @@ public class DetailsAppActivity extends AppCompatActivity {
     }
 
     public List<PermissionDetails> getGrantedPermList() {
-        List<PermissionDetails> deniedPermList = new ArrayList<>();
+        grantedPermList.clear();
         List<PermissionDetails> allPermission = getAllRequstedPermissions(EXTRA_APP_PACKAGE);
         for (PermissionDetails perm : allPermission) {
             if (perm.isGranted() == true) {
-                deniedPermList.add(perm);
+                grantedPermList.add(perm);
             }
         }
-        return deniedPermList;
+        return grantedPermList;
     }
 
     public void initData() {
+        sectionList.clear();
         sectionList.add(new PermissionSections("Granted", getGrantedPermList()));
         sectionList.add(new PermissionSections("Denied", getDeniedPermList()));
     }
