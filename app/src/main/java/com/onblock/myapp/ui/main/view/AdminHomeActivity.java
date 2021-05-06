@@ -1,36 +1,29 @@
 package com.onblock.myapp.ui.main.view;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.onblock.myapp.R;
 import com.onblock.myapp.controllers.AppInfoController;
+import com.onblock.myapp.controllers.KioskManager;
 import com.onblock.myapp.data.model.AppInfo;
-import com.onblock.myapp.data.model.AppInfoDao;
 import com.onblock.myapp.ui.main.adapter.AdminListAppAdapter;
 import com.onblock.myapp.ui.main.viewModel.AppInfoViewModel;
 
@@ -49,7 +42,6 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_home);
-
         appListView = findViewById(R.id.appList_view);
 
         adapter = new AdminListAppAdapter();
@@ -77,7 +69,7 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
             out.println("execute else statement");
             //SetOnAdapterAppList();
         }
-        SetOnAdapterAppList();
+        SetOnAdapterAppListInstalled();
         adapter.setOnItemClickListener(new AdminListAppAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(AppInfo appInfo) {
@@ -90,11 +82,23 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
 
     }
 
-    private void SetOnAdapterAppList() {
+    private void SetOnAdapterAppListInstalled() {
         appListView.setHasFixedSize(true);
         appListView.setLayoutManager(new LinearLayoutManager(this));
         appListView.setAdapter(adapter);
-        appInfoViewModel.getAllApps().observe(this, new Observer<List<AppInfo>>() {
+        appInfoViewModel.getInstalledApps().observe(this, new Observer<List<AppInfo>>() {
+            @Override
+            public void onChanged(@Nullable List<AppInfo> appInfos) {
+                adapter.setApps(appInfos);
+            }
+        });
+    }
+
+    private void SetOnAdapterSystemAppList() {
+        appListView.setHasFixedSize(true);
+        appListView.setLayoutManager(new LinearLayoutManager(this));
+        appListView.setAdapter(adapter);
+        appInfoViewModel.getAllASystempps().observe(this, new Observer<List<AppInfo>>() {
             @Override
             public void onChanged(@Nullable List<AppInfo> appInfos) {
                 adapter.setApps(appInfos);
@@ -105,17 +109,14 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
     public static void setifNormalUserAllowed(Boolean itUserAllowed, String packageName) {
         AppInfo appInfo;
         appInfo = appInfoViewModel.getFromPackage(packageName);
-        // out.println("Before => The package " + packageName + " is " + appInfo.getIsNormalUserAllowed());
         appInfo.setNormalUserAllowed(itUserAllowed);
         appInfoViewModel.update(appInfo);
-        // out.println("After => The package " + packageName + " is " + appInfo.getIsNormalUserAllowed());
     }
 
     @Override
     protected void onDestroy() {
         updateDb();
         super.onDestroy();
-
     }
 
     @Override
@@ -144,14 +145,13 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
                             pinfo.versionName,
                             pinfo.versionCode,
                             AppInfoController.drawable2Bytes(pm.getApplicationIcon(pack)),
-                            false);
+                            false,
+                            (app.flags & ApplicationInfo.FLAG_SYSTEM) != 0 | (app.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0);
 
                     appInfoViewModel.insert(newAppInfo);
-
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
-
             }
         }
         for (String pack : listPacksInDb) {
@@ -176,26 +176,80 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
         return true;
     }
 
+    public boolean b;
+
     @Override
-    public boolean onQueryTextSubmit(String query) {
-        if (query != null) {
-            searchDatabase(query);
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.denyAllApps:
+                appInfoViewModel.deniedAllApps();
+                return true;
+            case R.id.SystemApp:
+                if (item.isChecked()) {
+                    b = false;
+                    item.setChecked(false);
+                    SetOnAdapterAppListInstalled();
+                    Toast.makeText(AdminHomeActivity.this, "Hide System Apps ", Toast.LENGTH_SHORT).show();
+                } else {
+                    item.setChecked(true);
+                    b = true;
+                    SetOnAdapterSystemAppList();
+                    Toast.makeText(AdminHomeActivity.this, "Show System Apps ", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return true;
     }
 
     @Override
-    public boolean onQueryTextChange(String query) {
-        if (query != null) {
-            searchDatabase(query);
+    public boolean onQueryTextSubmit(String query) {
+        if (b) {
+            if (query != null) {
+                searchSystemApp(query);
+            }
+            return true;
+        } else {
+            if (query != null) {
+                searchDatabase(query);
+            }
+            return true;
         }
-        return true;
+    }
+
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+        if (b) {
+            if (query != null) {
+                searchSystemApp(query);
+            }
+            return true;
+        } else {
+            if (query != null) {
+                searchDatabase(query);
+            }
+            return true;
+        }
     }
 
     private void searchDatabase(String query) {
         String searchQuery = "%" + query + "%";
 
         appInfoViewModel.getSearchResults(searchQuery).observe(this, new Observer<List<AppInfo>>() {
+            @Override
+            public void onChanged(@Nullable List<AppInfo> appInfos) {
+                adapter.setApps(appInfos);
+            }
+        });
+    }
+
+
+    private void searchSystemApp(String query) {
+
+        String searchQuery = "%" + query + "%";
+
+        appInfoViewModel.getSearchResultsSystemAPP(searchQuery).observe(this, new Observer<List<AppInfo>>() {
             @Override
             public void onChanged(@Nullable List<AppInfo> appInfos) {
                 adapter.setApps(appInfos);

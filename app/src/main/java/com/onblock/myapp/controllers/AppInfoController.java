@@ -2,34 +2,25 @@ package com.onblock.myapp.controllers;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PermissionInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.onblock.myapp.R;
 import com.onblock.myapp.data.model.AppInfo;
-import com.onblock.myapp.data.model.PermissionDetails;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.System.out;
-import static java.security.AccessController.getContext;
-
 public class AppInfoController {
 
     static ArrayList<AppInfo> appInfoList = new ArrayList<AppInfo>();
-    static ArrayList<AppInfo> garantedAppsList = new ArrayList<>();
 
     @SuppressLint("WrongConstant")
     public static ArrayList<AppInfo> getAppInfoList(Activity a) {
@@ -38,6 +29,12 @@ public class AppInfoController {
         final int size = packs.size();
         for (int i = 0; i < size; i++) {
             PackageInfo p = packs.get(i);
+            ApplicationInfo app = null;
+            try {
+                app = a.getPackageManager().getApplicationInfo(p.packageName, 0);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
             if (p.versionName == null) {
                 continue;
             }
@@ -46,7 +43,8 @@ public class AppInfoController {
                     p.applicationInfo.loadLabel(a.getPackageManager()).toString(),
                     p.versionName,
                     p.versionCode, AppInfoController.drawable2Bytes((p.applicationInfo.loadIcon(a.getPackageManager()))),
-                    false);
+                    false,
+                    (app.flags & ApplicationInfo.FLAG_SYSTEM) != 0 | (app.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0);
             appInfoList.add(appInfo);
         }
         return appInfoList;
@@ -57,9 +55,7 @@ public class AppInfoController {
         //  List<ApplicationInfo> packs = a.getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA);
         @SuppressLint("WrongConstant")
         List<PackageInfo> packs = a.getPackageManager().getInstalledPackages(PackageManager.COMPONENT_ENABLED_STATE_DEFAULT);
-        // final int size = packs.size();
         for (PackageInfo pack : packs) {
-            //PackageInfo p = packs.get(i);
             packList.add(pack.packageName);
         }
         return packList;
@@ -116,7 +112,6 @@ public class AppInfoController {
     }
 
     //End======================Convert icon from byte array to drawable=====================================
-
 
 
 }

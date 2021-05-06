@@ -19,7 +19,6 @@ public class AppInfoRepository {
     public AppInfoRepository(Application application) {
         AppDb database = AppDb.getDatabaseInstance(application);
         appInfoDao = database.appInfoDao();
-        allApps = appInfoDao.getAllApps();
         allGrantedApps = appInfoDao.getAllGrantedApp();
         //  appInfo =  appInfoDao.getFromPackage(pn);
 
@@ -37,8 +36,8 @@ public class AppInfoRepository {
         new DeleteAppAsyncTask(appInfoDao).execute(appInfo);
     }
 
-    public LiveData<List<AppInfo>> getAllApps() {
-        return allApps;
+    public LiveData<List<AppInfo>> getAllASystempps() {
+        return appInfoDao.getAllASystempps();
     }
 
     public LiveData<List<AppInfo>> getAllGrantedApp() {
@@ -57,8 +56,19 @@ public class AppInfoRepository {
         return appInfoDao.getAllPackages();
     }
 
+    public LiveData<List<AppInfo>> getInstalledApps() {
+        return appInfoDao.getInstalledApps();
+    }
+
+    public void deniedAllApps(){
+        appInfoDao.deniedAllApps();
+    }
+
     public LiveData<List<AppInfo>> getSearchResults(String name) {
         return appInfoDao.getSearchResults(name);
+    }
+    public LiveData<List<AppInfo>> getSearchResultsSystemAPP(String name) {
+        return appInfoDao.getSearchResultsSystemAPP(name);
     }
 
 

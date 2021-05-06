@@ -33,12 +33,12 @@ public class PermissionListAdapter extends RecyclerView.Adapter<PermissionListAd
     public void onBindViewHolder(@NonNull PermissionListViewHolder holder, int position) {
         PermissionSections section = sections.get(position);
         String sectionName = section.getSectionName();
-        List<PermissionDetails> permissionsSection  = section.getPermissionItems();
+        List<PermissionDetails> permissionsSection = section.getPermissionItems();
         holder.sectionNameTV.setText(sectionName);
         ChildPermissionListAdapter childPermissionListAdapter = new ChildPermissionListAdapter(permissionsSection);
         holder.childRecyclerView.setAdapter(childPermissionListAdapter);
-        if (permissionsSection.isEmpty()){
-            holder.noPermission.setText("No "+ section.getSectionName() + " permission found");
+        if (permissionsSection.isEmpty()) {
+            holder.noPermission.setText("No " + section.getSectionName() + " permission found");
         }
     }
 
@@ -48,7 +48,7 @@ public class PermissionListAdapter extends RecyclerView.Adapter<PermissionListAd
     }
 
     static class PermissionListViewHolder extends RecyclerView.ViewHolder {
-        TextView sectionNameTV,noPermission;
+        TextView sectionNameTV, noPermission;
         RecyclerView childRecyclerView;
 
 

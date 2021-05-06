@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.onblock.myapp.R;
 import com.onblock.myapp.data.model.PermissionDetails;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ChildPermissionListAdapter extends RecyclerView.Adapter<ChildPermissionListAdapter.ViewHolder> {
@@ -31,9 +30,9 @@ public class ChildPermissionListAdapter extends RecyclerView.Adapter<ChildPermis
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if (getItemCount()==0){
+        if (getItemCount() == 0) {
 
-        }else{
+        } else {
             holder.permissionName.setText(perms.get(position).getPermissionName());
         }
 

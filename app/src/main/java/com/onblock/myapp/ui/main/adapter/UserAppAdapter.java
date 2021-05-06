@@ -1,15 +1,10 @@
 package com.onblock.myapp.ui.main.adapter;
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.onblock.myapp.R;
 import com.onblock.myapp.controllers.AppInfoController;
 import com.onblock.myapp.data.model.AppInfo;
-import com.onblock.myapp.ui.main.view.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;

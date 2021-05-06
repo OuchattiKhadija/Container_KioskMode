@@ -9,19 +9,15 @@ import androidx.lifecycle.LiveData;
 import com.onblock.myapp.data.model.AppInfo;
 import com.onblock.myapp.data.repository.AppInfoRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AppInfoViewModel extends AndroidViewModel {
     private AppInfoRepository repository;
-    private LiveData<List<AppInfo>> allApps, allGrantedApp;
-    AppInfo appInfo;
+    private LiveData<List<AppInfo>> allApps;
 
     public AppInfoViewModel(@NonNull Application application) {
         super(application);
         repository = new AppInfoRepository(application);
-        allApps = repository.getAllApps();
-        //allGrantedApp = repository.getAllGrantedApp();
     }
 
     public void insert(AppInfo appInfo) {
@@ -37,8 +33,8 @@ public class AppInfoViewModel extends AndroidViewModel {
     }
 
     // Use LiveData for getting all the data from the database
-    public LiveData<List<AppInfo>> getAllApps() {
-        return allApps;
+    public LiveData<List<AppInfo>> getAllASystempps() {
+        return repository.getAllASystempps();
     }
 
     public LiveData<List<AppInfo>> getAllGrantedApp() {
@@ -61,4 +57,17 @@ public class AppInfoViewModel extends AndroidViewModel {
     public LiveData<List<AppInfo>> getSearchResults(String name) {
         return repository.getSearchResults(name);
     }
+
+    public LiveData<List<AppInfo>> getSearchResultsSystemAPP(String name) {
+        return repository.getSearchResultsSystemAPP(name);
+    }
+
+    public void deniedAllApps() {
+        repository.deniedAllApps();
+    }
+
+    public LiveData<List<AppInfo>> getInstalledApps() {
+        return repository.getInstalledApps();
+    }
+
 }

@@ -1,35 +1,32 @@
 package com.onblock.myapp.controllers;
 
 import android.app.admin.DeviceAdminReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
+import android.util.Log;
 
-import com.onblock.myapp.R;
+
+
+import androidx.annotation.NonNull;
+
 
 public class MyDeviceAdminReceiver extends DeviceAdminReceiver {
-    @Override
-    public void onEnabled(Context context, Intent intent) {
-        Toast.makeText(context, context.getString(R.string.device_admin_enabled), Toast.LENGTH_SHORT).show();
+    private static final String TAG = "MyDeviceAdminReceiver";
+
+    public static final ComponentName getComponentName(@NonNull Context context) {
+        return new ComponentName(context.getApplicationContext(), MyDeviceAdminReceiver.class);
     }
 
-    @Override
-    public CharSequence onDisableRequested(Context context, Intent intent) {
-        return context.getString(R.string.device_admin_warning);
+    public void onLockTaskModeEntering(@NonNull Context context, @NonNull Intent intent, @NonNull String pkg) {
+        super.onLockTaskModeEntering(context, intent, pkg);
+        Log.d(TAG, "onLockTaskModeEntering");
     }
 
-    @Override
-    public void onDisabled(Context context, Intent intent) {
-        Toast.makeText(context, context.getString(R.string.device_admin_disabled), Toast.LENGTH_SHORT).show();
+    public void onLockTaskModeExiting(@NonNull Context context, @NonNull Intent intent) {
+        super.onLockTaskModeExiting(context, intent);
+        Log.d(TAG, "onLockTaskModeExiting");
     }
 
-    @Override
-    public void onLockTaskModeEntering(Context context, Intent intent, String pkg) {
-        Toast.makeText(context, context.getString(R.string.kiosk_mode_enabled), Toast.LENGTH_SHORT).show();
-    }
 
-    @Override
-    public void onLockTaskModeExiting(Context context, Intent intent) {
-        Toast.makeText(context, context.getString(R.string.kiosk_mode_disabled), Toast.LENGTH_SHORT).show();
-    }
 }

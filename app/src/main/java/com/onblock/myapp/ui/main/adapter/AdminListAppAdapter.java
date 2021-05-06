@@ -1,35 +1,22 @@
 package com.onblock.myapp.ui.main.adapter;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.onblock.myapp.R;
 import com.onblock.myapp.controllers.AppInfoController;
 import com.onblock.myapp.data.model.AppInfo;
 import com.onblock.myapp.ui.main.view.AdminHomeActivity;
-import com.onblock.myapp.ui.main.view.MainActivity;
-import com.onblock.myapp.ui.main.viewModel.AppInfoViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.System.out;
 
 public class AdminListAppAdapter extends RecyclerView.Adapter<AdminListAppAdapter.AdminViewHolder> {
 

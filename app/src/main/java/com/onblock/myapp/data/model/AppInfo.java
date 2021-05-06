@@ -1,15 +1,9 @@
 package com.onblock.myapp.data.model;
 
-import android.graphics.drawable.Drawable;
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Entity(tableName = "appInfo_table")
@@ -35,11 +29,8 @@ public class AppInfo {
     @ColumnInfo(name = "versionCode")
     private int versionCode;
 
-    //to remove
-    @Ignore
-    private ArrayList<String> grantedPermissionList = new ArrayList<>();
-    @Ignore
-    private final ArrayList<String> deniedPermissionList = new ArrayList<>();
+    @ColumnInfo(name = "isSystemApp")
+    private boolean isSystemApp;
 
     //Constructor
 
@@ -47,13 +38,14 @@ public class AppInfo {
     //  public AppInfo() {
     // }
 
-    public AppInfo(@NonNull String packageName, String name, String versionName, int versionCode, byte[] icon, boolean isNormalUserAllowed) {
+    public AppInfo(@NonNull String packageName, String name, String versionName, int versionCode, byte[] icon, boolean isNormalUserAllowed, boolean isSystemApp) {
         this.packageName = packageName;
         this.name = name;
         this.isNormalUserAllowed = isNormalUserAllowed;
         this.versionName = versionName;
         this.icon = icon;
         this.versionCode = versionCode;
+        this.isSystemApp = isSystemApp;
     }
 
 
@@ -106,11 +98,8 @@ public class AppInfo {
         isNormalUserAllowed = isAllowed;
     }
 
-    //to remove
-    public void setGrantedPermissionList(ArrayList<String> grantedPermissionList) {
-        this.grantedPermissionList = grantedPermissionList;
+    public boolean isSystemApp() {
+        return isSystemApp;
     }
-
-
 }
 
