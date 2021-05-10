@@ -27,7 +27,7 @@ public class LogInActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                    MainActivity.kioskManager.setKioskPolicies(false, MainActivity.isAdmin);
+                    //MainActivity.setKioskPolicies(false);
                     Intent intent = new Intent(LogInActivity.this, AdminHomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra(LOCK_ACTIVITY_KEY, false);
@@ -35,4 +35,11 @@ public class LogInActivity extends AppCompatActivity {
                 }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+
 }

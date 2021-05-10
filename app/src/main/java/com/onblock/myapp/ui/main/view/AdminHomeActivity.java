@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -38,6 +40,13 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
     static AppInfoViewModel appInfoViewModel;
     AdminListAppAdapter adapter;
 
+
+    private long backPressedTime;
+    private Toast backToast;
+
+    public static KioskManager kioskManager;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +56,7 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
         adapter = new AdminListAppAdapter();
 
         appInfoViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(AppInfoViewModel.class);
+
 
         boolean mboolean = false;
 
@@ -80,6 +90,28 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
             }
         });
 
+        kioskManager = new KioskManager(this);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+            backToast.cancel();
+            goToHome();
+            return;
+        } else {
+            backToast = Toast.makeText(getBaseContext(), "Press back again to exit Admin Page ", Toast.LENGTH_SHORT);
+            backToast.show();
+        }
+
+        backPressedTime = System.currentTimeMillis();
+    }
+
+    private void goToHome() {
+        Intent intent = new Intent(AdminHomeActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 
     private void SetOnAdapterAppListInstalled() {
@@ -129,7 +161,6 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
         List<String> listPacksInDevice, listPacksInDb;
         listPacksInDevice = AppInfoController.getPackageList(this);
         listPacksInDb = appInfoViewModel.getAllPackages();
-        //Toast.makeText(AdminHomeActivity.this, "list On Db ", Toast.LENGTH_SHORT).show();
 
         for (String pack : listPacksInDevice) {
             if (!listPacksInDb.contains(pack)) {
@@ -178,12 +209,14 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
 
     public boolean b;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.denyAllApps:
                 appInfoViewModel.deniedAllApps();
                 return true;
+
             case R.id.SystemApp:
                 if (item.isChecked()) {
                     b = false;
@@ -197,6 +230,21 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
                     Toast.makeText(AdminHomeActivity.this, "Show System Apps ", Toast.LENGTH_SHORT).show();
                 }
                 return true;
+
+            case R.id.exitKiosk:
+                if (!item.isChecked()) {
+                    item.setChecked(true);
+                    item.setTitle("Disable StatusBar ");
+                    Toast.makeText(this, " StatusBar Enable", Toast.LENGTH_SHORT).show();
+                    kioskManager.getmDevicePolicyManager().setStatusBarDisabled(kioskManager.getmAdminComponentName(), false);
+                } else {
+                    item.setChecked(false);
+                    kioskManager.getmDevicePolicyManager().setStatusBarDisabled(kioskManager.getmAdminComponentName(), true);
+                    item.setTitle("Enable StatusBar");
+                    Toast.makeText(this, "StatusBar Disable", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -9,6 +9,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.annotation.RequiresApi;
 
@@ -24,6 +25,13 @@ public class KioskManager {
     private DevicePolicyManager mDevicePolicyManager;
     private ComponentName mAdminComponentName;
 
+    public DevicePolicyManager getmDevicePolicyManager() {
+        return mDevicePolicyManager;
+    }
+
+    public ComponentName getmAdminComponentName() {
+        return mAdminComponentName;
+    }
 
     public KioskManager(Activity activity) {
         this.activity = activity;
@@ -31,30 +39,31 @@ public class KioskManager {
         mDevicePolicyManager = (DevicePolicyManager) activity.getSystemService(DEVICE_POLICY_SERVICE);    // Initializing device policy manager
     }
 
-    public void removeActiveAdmine(){
-        mDevicePolicyManager.removeActiveAdmin(mAdminComponentName);
-    }
-
-    public final boolean isAdmin() {
-        return mDevicePolicyManager.isDeviceOwnerApp(activity.getPackageName());
-        //return true;
-    }
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public final void setKioskPolicies(boolean enable, boolean isAdmin) {
-        if (isAdmin) {
-            this.setRestrictions(enable);
-            this.enableStayOnWhilePluggedIn(enable);
-            this.setUpdatePolicy(enable);
-            this.setAsHomeApp(enable);
-            this.setKeyGuardEnabled(enable);
-        }
+    public void setKioskPolicies(boolean enable) {
 
-        this.setLockTask(enable, isAdmin);
+        this.setRestrictions(enable);
+        this.enableStayOnWhilePluggedIn(enable);
+        this.setUpdatePolicy(enable);
+        this.setAsHomeApp(enable);
+        this.setKeyGuardEnabled(enable);
+
+        this.setLockTask(enable);
         this.setImmersiveMode(enable);
     }
 
+    private void setLockTask(boolean start) {
+        mDevicePolicyManager.setLockTaskPackages(mAdminComponentName, start ? new String[]{activity.getPackageName()} : new String[0]);
+/*
+        if (start) {
+            this.startLockTask();
+        } else {
+            this.stopLockTask();
+        }*/
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private final void setRestrictions(boolean disallow) {
+    public final void setRestrictions(boolean disallow) {
         this.setUserRestriction("no_safe_boot", disallow);
         this.setUserRestriction("no_factory_reset", disallow);
         this.setUserRestriction("no_add_user", disallow);
@@ -71,27 +80,6 @@ public class KioskManager {
         }
     }
 
-    private final void enableStayOnWhilePluggedIn(boolean active) {
-        if (active) {
-            mDevicePolicyManager.setGlobalSetting(
-                    mAdminComponentName,
-                    Settings.Global.STAY_ON_WHILE_PLUGGED_IN,
-                    String.valueOf((BATTERY_PLUGGED_AC | BATTERY_PLUGGED_USB | BATTERY_PLUGGED_WIRELESS)));
-        }
-    }
-
-    public final void setLockTask(boolean start, boolean isAdmin) {
-        if (isAdmin) {
-            mDevicePolicyManager.setLockTaskPackages(mAdminComponentName, start ? new String[]{activity.getPackageName()} : new String[0]);
-        }
-        if (start) {
-            activity.startLockTask();
-        } else {
-            activity.stopLockTask();
-        }
-    }
-
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     private final void setUpdatePolicy(boolean enable) {
         if (enable) {
@@ -102,7 +90,6 @@ public class KioskManager {
         }
     }
 
-    //https://stackoverflow.com/questions/10904841/avoid-securityexception-because-of-no-active-admin-owned-by
     private final void setAsHomeApp(boolean enable) {
         if (enable) {
             IntentFilter intentFilter = new IntentFilter("android.intent.action.MAIN");
@@ -120,21 +107,32 @@ public class KioskManager {
     private final void setKeyGuardEnabled(boolean enable) {
         mDevicePolicyManager.setKeyguardDisabled(mAdminComponentName, !enable);
     }
+    //option Stay awake – Screen will never sleep while charging
 
-    private final void setImmersiveMode(boolean enable) {
+    private final void enableStayOnWhilePluggedIn(boolean active) {
+        if (active) {
+            mDevicePolicyManager.setGlobalSetting(
+                    mAdminComponentName,
+                    Settings.Global.STAY_ON_WHILE_PLUGGED_IN,
+                    String.valueOf((BATTERY_PLUGGED_AC | BATTERY_PLUGGED_USB | BATTERY_PLUGGED_WIRELESS)));
+        }
+    }
+
+    public final void setImmersiveMode(boolean enable) {
         short flags;
         Window window = activity.getWindow();
         View view;
         if (enable) {
-            flags = (View.SYSTEM_UI_FLAG_IMMERSIVE
+            flags = (//View.SYSTEM_UI_FLAG_IMMERSIVE
                     // Set the content to appear under the system bars so that the
                     // content doesn't resize when the system bars hide and show.
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    // Hide the nav bar and status bar
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN);
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            // Hide the nav bar and status bar
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
             view = window.getDecorView();
             view.setSystemUiVisibility(flags);
         } else {
@@ -143,6 +141,7 @@ public class KioskManager {
                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
         view = window.getDecorView();
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         view.setSystemUiVisibility(flags);
 
     }

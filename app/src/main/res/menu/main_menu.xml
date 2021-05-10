@@ -9,16 +9,23 @@
         android:title="Show System App"
         android:checkable="true"
         app:showAsAction="never" />
-    <group>
-        <item android:id="@+id/LogOut"
-            android:title="Log Out"
-            app:showAsAction="never"
-            android:icon="@drawable/ic_exit_to_app"/>
-    </group>
+
+    <item android:id="@+id/exitKiosk"
+        android:title="Enable StatusBar "
+        app:showAsAction="never" />
+
     <item android:id="@+id/menu_search"
         android:title="Search"
         android:icon="@drawable/ic_search"
         android:iconTint="@color/white"
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="android.widget.SearchView" />
+
+    <group>
+
+        <item android:id="@+id/LogOut"
+            android:title="Log Out"
+            app:showAsAction="never"
+            android:icon="@drawable/ic_exit_to_app"/>
+    </group>
 </menu>
