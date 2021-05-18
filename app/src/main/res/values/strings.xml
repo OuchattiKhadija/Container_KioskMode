@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">Kiosk Container</string>
-    <string name="device_admin_enabled">Device Admin enabled</string>
-    <string name="device_admin_warning">Warning: Device Admin is going to be disabled.</string>
-    <string name="device_admin_disabled">Device Admin disabled</string>
     <string name="kiosk_mode_enabled">Kiosk Mode enabled</string>
     <string name="kiosk_mode_disabled">Kiosk Mode disabled</string>
     <string name="enter_kiosk_mode">Enter Kiosk Mode</string>
@@ -11,5 +8,4 @@
     <string name="not_device_admin">This app is not a device admin!</string>
     <string name="device_owner">This app is the device owner!</string>
     <string name="not_device_owner">This app is not the device owner!</string>
-    <string name="check_update">Check for Update</string>
 </resources>

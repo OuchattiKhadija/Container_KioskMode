@@ -1,22 +1,14 @@
 package com.onblock.myapp.ui.main.view;
 
-import android.app.ActivityManager;
+import android.annotation.SuppressLint;
 import android.app.admin.DevicePolicyManager;
-import android.app.admin.SystemUpdatePolicy;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.GestureDetector;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,17 +22,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.onblock.myapp.R;
 import com.onblock.myapp.controllers.KioskManager;
-import com.onblock.myapp.controllers.MyDeviceAdminReceiver;
 import com.onblock.myapp.data.model.AppInfo;
 import com.onblock.myapp.ui.main.adapter.UserAppAdapter;
 import com.onblock.myapp.ui.main.viewModel.AppInfoViewModel;
 
 import java.util.List;
-
-import static android.os.BatteryManager.BATTERY_PLUGGED_AC;
-import static android.os.BatteryManager.BATTERY_PLUGGED_USB;
-import static android.os.BatteryManager.BATTERY_PLUGGED_WIRELESS;
-import static java.lang.System.out;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -48,31 +34,64 @@ public class MainActivity extends AppCompatActivity {
     AppInfoViewModel appInfoViewModel;
     UserAppAdapter adapter;
 
-    //private ComponentName mAdminComponentName;
-   // private DevicePolicyManager mDevicePolicyManager;
-
     public static KioskManager kioskManager;
 
     public static Boolean isAdmin;
     @NonNull
     public static final String LOCK_ACTIVITY_KEY = "com.onblock.myapp.ui.main.view.MainActivity";
 
+    public void clearDeviceOwner() {
+        DevicePolicyManager devicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+        devicePolicyManager.clearDeviceOwnerApp(this.getPackageName());
+    }
+
+    @SuppressLint("ResourceAsColor")
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Now get a handle to any View contained
+        // within the main layout you are using
+        View someView = findViewById(R.id.gridApps);
+        // Find the root view
+        View root = someView.getRootView();
+        // Set the color
+        //root.setBackgroundColor(getResources().getColor(R.color.custTransparent));
+
+
+        /*boolean mboolean = false;
+
+        SharedPreferences settings = getSharedPreferences("PREFS_NAME", 0);
+        mboolean = settings.getBoolean("FIRST_RUN", false);
+        if (!mboolean) {
+            // do the thing for the first time
+            try {
+                AppInfoController.runShellCommand("adb shell dpm set-device-owner com.onblock.myapp/com.onblock.myapp.controllers.MyDeviceAdminReceiver");
+                out.println("admiiiiin actadm");
+            } catch (Exception e) {
+                e.printStackTrace();
+                out.println("admiiiiin errr");
+            }
+            settings = getSharedPreferences("PREFS_NAME", 0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putBoolean("FIRST_RUN", true);
+            editor.commit();
+        } else {
+            // other time your app loads
+        }*/
+
         kioskManager = new KioskManager(MainActivity.this);
-        //mAdminComponentName = MyDeviceAdminReceiver.getComponentName(this);
-        //mDevicePolicyManager = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+
+        // clearDeviceOwner();
 
         if (kioskManager.getmDevicePolicyManager().isDeviceOwnerApp(getPackageName())) {
             // You are the owner!
             kioskManager.setKioskPolicies(true);
         } else {
             // Please contact your system administrator
-            Toast.makeText(this, "Please contact your system administrator", Toast.LENGTH_LONG);
-
+            Toast.makeText(this, "Please contact your system administrator,  App is not the Owner", Toast.LENGTH_LONG);
         }
 
 /*
@@ -102,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 if (launchIntent != null) {
                     startActivity(launchIntent);//null pointer check in case package name was not found
                 } else {
-                    Toast.makeText(MainActivity.this, "Package Not found", Toast.LENGTH_LONG);
+                    Toast.makeText(MainActivity.this, "Package Not found", Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -110,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
     final GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
         public void onLongPress(MotionEvent e) {
-            Toast.makeText(MainActivity.this, "Long press detected",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Long press detected", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(MainActivity.this, LogInActivity.class);
             startActivity(intent);
         }
@@ -119,35 +138,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return gestureDetector.onTouchEvent(event);
-    };
-
-
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onStart() {
-        kioskManager.setKioskPolicies(true);
+        if (kioskManager.getmDevicePolicyManager().isDeviceOwnerApp(getPackageName())) {
+            // You are the owner!
+            kioskManager.setKioskPolicies(true);
+        } else {
+            // Please contact your system administrator
+            Toast.makeText(this, "Please contact your system administrator , App is not the Owner", Toast.LENGTH_LONG).show();
+        }
         super.onStart();
     }
 
     @Override
     public void onBackPressed() {
         // nothing to do here
-        // … really
     }
-
-    @Override
-    protected void onPause() {
-
-        //  ActivityManager activityManager = (ActivityManager) getApplicationContext()
-//                .getSystemService(Context.ACTIVITY_SERVICE);
-
-        //      activityManager.moveTaskToFront(getTaskId(), 0);
-        super.onPause();
-    }
-
-
-
 
     private void getAllowdedAppList() {
         appGrideView.setHasFixedSize(true);
@@ -157,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<AppInfo> appInfos) {
                 if (appInfos.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "No App is Granted!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "No App is Granted!", Toast.LENGTH_SHORT).show();
                     adapter.setGrantedApps(appInfos);
                 } else {
                     adapter.setGrantedApps(appInfos);
@@ -182,27 +191,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
 /**
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void setKioskPolicies(boolean enable) {
+ @RequiresApi(api = Build.VERSION_CODES.M)
+ public void setKioskPolicies(boolean enable) {
 
-        this.setRestrictions(enable);
-        this.enableStayOnWhilePluggedIn(enable);
-        this.setUpdatePolicy(enable);
-        this.setAsHomeApp(enable);
-        this.setKeyGuardEnabled(enable);
+ this.setRestrictions(enable);
+ this.enableStayOnWhilePluggedIn(enable);
+ this.setUpdatePolicy(enable);
+ this.setAsHomeApp(enable);
+ this.setKeyGuardEnabled(enable);
 
-        this.setLockTask(enable);
-        this.setImmersiveMode(enable);
-    }
+ this.setLockTask(enable);
+ this.setImmersiveMode(enable);
+ }
 
-    private void setLockTask(boolean start) {
-      mDevicePolicyManager.setLockTaskPackages(mAdminComponentName, start ? new String[]{this.getPackageName()} : new String[0]);
-/*
-        if (start) {
-            this.startLockTask();
-        } else {
-            this.stopLockTask();
-        }*/
+ private void setLockTask(boolean start) {
+ mDevicePolicyManager.setLockTaskPackages(mAdminComponentName, start ? new String[]{this.getPackageName()} : new String[0]);
+ /*
+ if (start) {
+ this.startLockTask();
+ } else {
+ this.stopLockTask();
+ }*/
     /*}
 
     @RequiresApi(api = Build.VERSION_CODES.M)

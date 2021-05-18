@@ -67,6 +67,7 @@ public class AppInfoRepository {
     public LiveData<List<AppInfo>> getSearchResults(String name) {
         return appInfoDao.getSearchResults(name);
     }
+
     public LiveData<List<AppInfo>> getSearchResultsSystemAPP(String name) {
         return appInfoDao.getSearchResultsSystemAPP(name);
     }

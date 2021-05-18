@@ -41,7 +41,6 @@ public class AppInfoViewModel extends AndroidViewModel {
         return repository.getAllGrantedApp();
     }
 
-
     public AppInfo getFromPackage(String pn) {
         return repository.getFromPackage(pn);
     }

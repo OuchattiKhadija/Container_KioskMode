@@ -2,6 +2,9 @@ package com.onblock.myapp.controllers;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.Application;
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -17,6 +20,8 @@ import com.onblock.myapp.data.model.AppInfo;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.System.out;
 
 public class AppInfoController {
 
@@ -61,7 +66,6 @@ public class AppInfoController {
         return packList;
     }
 
-
     //Start======================Convert icon from drawable to byte array====================================
     public static byte[] drawable2Bytes(Drawable d) {
         Bitmap bitmap = drawable2Bitmap(d);
@@ -87,7 +91,6 @@ public class AppInfoController {
         bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
         return baos.toByteArray();
     }
-
     //End======================Convert icon from drawable to byte array=====================================
 
     //Start======================Convert icon from byte array to drawable===================================
@@ -110,9 +113,52 @@ public class AppInfoController {
         Drawable d = bd;
         return d;
     }
-
     //End======================Convert icon from byte array to drawable=====================================
 
+    public static void killAllBackroundApps(Activity activity) {
+
+        List<ApplicationInfo> packages;
+        PackageManager pm;
+        pm = activity.getPackageManager();
+        //get a list of installed apps.
+        packages = pm.getInstalledApplications(0);
+        out.println("lee package 1 " + packages.get(0).packageName);
+        out.println("lee package 3 " + packages.get(2).packageName);
+
+        ActivityManager mActivityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
+
+        for (ApplicationInfo packageInfo : packages) {
+            if ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+                continue;
+            } else if (packageInfo.packageName.equals(activity.getPackageName())) {
+                continue;
+            } else {
+                mActivityManager.killBackgroundProcesses(packageInfo.packageName);
+                out.println("lee package " + packageInfo.packageName);
+            }
+        }
+    }
+
+    public static void killAllBackroundApps(Application application) {
+        Context context = application.getApplicationContext();
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (am != null) {
+            List<ActivityManager.AppTask> tasks = am.getAppTasks();
+            out.println("Taskss " + tasks);
+            if (tasks != null && tasks.size() > 0) {
+                //tasks.get(0).setExcludeFromRecents(true);
+               // for (ActivityManager.AppTask task : tasks){
+                for (int i=1; i < tasks.size(); i++ ){
+                    tasks.get(i).finishAndRemoveTask();
+                }
+            }
+        }
+    }
+
+    public static void runShellCommand(String command) throws Exception {
+        Process process = Runtime.getRuntime().exec(command);
+        process.waitFor();
+    }
 
 }
 

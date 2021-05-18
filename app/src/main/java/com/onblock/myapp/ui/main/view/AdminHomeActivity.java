@@ -1,5 +1,6 @@
 package com.onblock.myapp.ui.main.view;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -9,7 +10,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -46,12 +49,20 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
 
     public static KioskManager kioskManager;
 
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_home);
         appListView = findViewById(R.id.appList_view);
+
+        progressDialog = new ProgressDialog(AdminHomeActivity.this);
+        //progressDialog.setMessage("Loading..."); // Setting Message
+        //progressDialog.setTitle("ProgressDialog"); // Setting Title
+        //progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+
+
 
         adapter = new AdminListAppAdapter();
 
@@ -63,13 +74,23 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
         SharedPreferences settings = getSharedPreferences("PREFS_NAME", 0);
         mboolean = settings.getBoolean("FIRST_RUN", false);
         if (!mboolean) {
+
+            //progressDialog.setCancelable(false);
+            progressDialog.show(); // Display Progress Dialog
+            progressDialog.setContentView(R.layout.progress_dialog);
+            //set transparent background
+            progressDialog.getWindow().setBackgroundDrawableResource(
+                    android.R.color.transparent
+            );
             // do the thing for the first time
+            //initProgressDialog().show();
             List<AppInfo> firstAppList;
             firstAppList = AppInfoController.getAppInfoList(this);
             for (AppInfo app : firstAppList) {
                 appInfoViewModel.insert(app);
                 out.println("app ajouter a la DB " + app.getName());
             }
+            progressDialog.dismiss();
             settings = getSharedPreferences("PREFS_NAME", 0);
             SharedPreferences.Editor editor = settings.edit();
             editor.putBoolean("FIRST_RUN", true);
@@ -92,6 +113,27 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
 
         kioskManager = new KioskManager(this);
 
+    }
+
+    @Override
+    protected void onStop() {
+        updateDb();
+        //AppInfoController.killAllBackroundApps(this);
+        //AppInfoController.killAllBackroundApps(this.getApplication());
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        updateDb();
+        super.onDestroy();
+        // ActivityManager.getRecentTasks();
+    }
+
+    @Override
+    protected void onStart() {
+        updateDb();
+        super.onStart();
     }
 
     @Override
@@ -145,18 +187,6 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
         appInfoViewModel.update(appInfo);
     }
 
-    @Override
-    protected void onDestroy() {
-        updateDb();
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onStart() {
-        updateDb();
-        super.onStart();
-    }
-
     public void updateDb() {
         List<String> listPacksInDevice, listPacksInDb;
         listPacksInDevice = AppInfoController.getPackageList(this);
@@ -164,7 +194,7 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
 
         for (String pack : listPacksInDevice) {
             if (!listPacksInDb.contains(pack)) {
-                out.println("Cete ellement nesxit pas dans la basede donné =>" + pack);
+                out.println("Cete element n'esxit pas dans la basede donné =>" + pack);
                 //add app to db
                 try {
                     PackageManager pm = getPackageManager();
@@ -194,7 +224,6 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -207,7 +236,7 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
         return true;
     }
 
-    public boolean b;
+    public boolean b = false;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -231,7 +260,7 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
                 }
                 return true;
 
-            case R.id.exitKiosk:
+            case R.id.enableStatBar:
                 if (!item.isChecked()) {
                     item.setChecked(true);
                     item.setTitle("Disable StatusBar ");
@@ -244,6 +273,16 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
                     Toast.makeText(this, "StatusBar Disable", Toast.LENGTH_SHORT).show();
                 }
                 return true;
+
+            case R.id.exitKiosk:
+                if (!item.isChecked()) {
+                    item.setChecked(true);
+                   // item.setTitle("Enable Kiosk Mode ");
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.removeCategory("android.intent.category.HOME");
+                    intent.removeCategory("android.intent.category.DEFAULT");
+                    kioskManager.setKioskPolicies(false);
+                }
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -264,7 +303,6 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
             return true;
         }
     }
-
 
     @Override
     public boolean onQueryTextChange(String query) {
@@ -292,7 +330,6 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
         });
     }
 
-
     private void searchSystemApp(String query) {
 
         String searchQuery = "%" + query + "%";
@@ -303,6 +340,17 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
                 adapter.setApps(appInfos);
             }
         });
+    }
+
+    private ProgressDialog initProgressDialog(){
+       ProgressDialog progressDialog = new ProgressDialog(AdminHomeActivity.this);
+        progressDialog.setMessage("Loading..."); // Setting Message
+        progressDialog.setTitle("ProgressDialog"); // Setting Title
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
+      //  progressDialog.show(); // Display Progress Dialog
+        progressDialog.setCancelable(false);
+
+        return progressDialog;
     }
 
 }

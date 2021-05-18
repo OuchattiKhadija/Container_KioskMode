@@ -107,8 +107,8 @@ public class KioskManager {
     private final void setKeyGuardEnabled(boolean enable) {
         mDevicePolicyManager.setKeyguardDisabled(mAdminComponentName, !enable);
     }
-    //option Stay awake – Screen will never sleep while charging
 
+    //option Stay awake – Screen will never sleep while charging
     private final void enableStayOnWhilePluggedIn(boolean active) {
         if (active) {
             mDevicePolicyManager.setGlobalSetting(
