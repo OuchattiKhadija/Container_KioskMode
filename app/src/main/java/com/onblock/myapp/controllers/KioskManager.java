@@ -13,6 +13,7 @@ import android.view.WindowManager;
 
 import androidx.annotation.RequiresApi;
 
+import com.ft.possystem.PosSystemManager;
 import com.onblock.myapp.ui.main.view.MainActivity;
 
 import static android.content.Context.DEVICE_POLICY_SERVICE;
@@ -25,6 +26,16 @@ public class KioskManager {
     private DevicePolicyManager mDevicePolicyManager;
     private ComponentName mAdminComponentName;
 
+    public KioskManager(Activity activity) {
+        this.activity = activity;
+        mAdminComponentName = new ComponentName( activity, MyDeviceAdminReceiver.class);
+        //mAdminComponentName = MyDeviceAdminReceiver.getComponentName(activity);
+        mDevicePolicyManager = (DevicePolicyManager) activity.getSystemService(DEVICE_POLICY_SERVICE);    // Initializing device policy manager
+        PosSystemManager.getInstance(activity).getPosApplication().setActiveAdmin(mAdminComponentName);
+        //PosSystemManager.getInstance(this).getPosApplication().disableApplication(getPackageName(), true);
+
+    }
+
     public DevicePolicyManager getmDevicePolicyManager() {
         return mDevicePolicyManager;
     }
@@ -33,11 +44,6 @@ public class KioskManager {
         return mAdminComponentName;
     }
 
-    public KioskManager(Activity activity) {
-        this.activity = activity;
-        mAdminComponentName = MyDeviceAdminReceiver.getComponentName(activity);
-        mDevicePolicyManager = (DevicePolicyManager) activity.getSystemService(DEVICE_POLICY_SERVICE);    // Initializing device policy manager
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void setKioskPolicies(boolean enable) {
@@ -48,19 +54,54 @@ public class KioskManager {
         this.setAsHomeApp(enable);
         this.setKeyGuardEnabled(enable);
 
-        this.setLockTask(enable);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            this.setLockTask(enable);
+        }
         this.setImmersiveMode(enable);
     }
 
-    private void setLockTask(boolean start) {
-        mDevicePolicyManager.setLockTaskPackages(mAdminComponentName, start ? new String[]{activity.getPackageName()} : new String[0]);
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void setLockTask(boolean suspended) {
+            /*// Allowlist two apps.
+        private static final String KIOSK_PACKAGE = "com.example.kiosk";
+        private static final String PLAYER_PACKAGE = "com.example.player";
+        private static final String[] APP_PACKAGES = {KIOSK_PACKAGE, PLAYER_PACKAGE};
+
+        // ...
+
+        Context context = getContext();
+        DevicePolicyManager dpm =
+            (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
+        ComponentName adminName = getComponentName(context);
+        dpm.setLockTaskPackages(adminName, APP_PACKAGES);*/
+
+
+        // mDevicePolicyManager.setLockTaskPackages(mAdminComponentName, start ? new String[]{activity.getPackageName()} : new String[0]);
 /*
-        if (start) {
-            this.startLockTask();
+        final String KIOSK_PACKAGE = "com.onblock.myapp";
+        final String PLAYER_PACKAGE = "com.example.miwok_languge";
+        final String[] APP_PACKAGES = {KIOSK_PACKAGE, PLAYER_PACKAGE};
+        // // mDPM is the admin package, and allow the specified packages to lock task
+        mDevicePolicyManager.setLockTaskPackages(mAdminComponentName, APP_PACKAGES);
+
+
+
+        if (suspended) {
+            activity.startLockTask();
         } else {
-            this.stopLockTask();
-        }*/
+            activity.stopLockTask();
+        }
+        */
+
+      /*  final String PLAYER_PACKAGE = "com.example.miwok_languge";
+        final String[] APP_PACKAGES = { PLAYER_PACKAGE};
+            mDevicePolicyManager.setPackagesSuspended (mAdminComponentName,
+                    APP_PACKAGES,
+             suspended);*/
+       // final String PLAYER_PACKAGE = "com.example.securityapp";
+       // disableApp(PLAYER_PACKAGE);
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public final void setRestrictions(boolean disallow) {
@@ -80,6 +121,7 @@ public class KioskManager {
         }
     }
 
+    //Called by device owners or profile owners of an organization-owned managed profile to to set a local system update policy.
     @RequiresApi(api = Build.VERSION_CODES.M)
     private final void setUpdatePolicy(boolean enable) {
         if (enable) {
@@ -103,9 +145,12 @@ public class KioskManager {
         }
     }
 
+    //Enable the keyguard during LockTask mode
+    //We should also disable Keyguard so that when the device boots, our application will start immediately without the lock screen appearing.
     @RequiresApi(api = Build.VERSION_CODES.M)
     private final void setKeyGuardEnabled(boolean enable) {
-        mDevicePolicyManager.setKeyguardDisabled(mAdminComponentName, !enable);
+        //mDevicePolicyManager.setKeyguardDisabled(mAdminComponentName, !enable);
+        mDevicePolicyManager.setKeyguardDisabled(mAdminComponentName, enable);
     }
 
     //option Stay awake – Screen will never sleep while charging
@@ -118,6 +163,7 @@ public class KioskManager {
         }
     }
 
+    //enable the app to be in fullscreen
     public final void setImmersiveMode(boolean enable) {
         short flags;
         Window window = activity.getWindow();
@@ -141,9 +187,16 @@ public class KioskManager {
                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
         view = window.getDecorView();
+
+        //keep the screen on with full power
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         view.setSystemUiVisibility(flags);
 
+    }
+
+    public final void disableApp(String pkg){
+         PosSystemManager.getInstance(activity).getPosApplication().disableApplication(pkg, true);
     }
 
 }

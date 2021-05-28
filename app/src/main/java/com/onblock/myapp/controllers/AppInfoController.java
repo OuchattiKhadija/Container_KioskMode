@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
+import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -14,8 +15,10 @@ import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
 
 import com.onblock.myapp.data.model.AppInfo;
+import com.onblock.myapp.ui.main.view.MainActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -155,6 +158,18 @@ public class AppInfoController {
         }
     }
 
+    public static void clearDeviceOwner(Application application) {
+        DevicePolicyManager devicePolicyManager = (DevicePolicyManager) application.getSystemService(Context.DEVICE_POLICY_SERVICE);
+        devicePolicyManager.clearDeviceOwnerApp(application.getPackageName());
+    }
+
+    public static int calculateNoOfRows(Context context, float columnWidthDp) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float screenHightDp = displayMetrics.heightPixels / displayMetrics.density;
+        int noOfRows = (int) (screenHightDp / columnWidthDp + 0.5); // +0.5 for correct rounding to int.
+        out.println("nuOfRows " + noOfRows);
+        return noOfRows;
+    }
     public static void runShellCommand(String command) throws Exception {
         Process process = Runtime.getRuntime().exec(command);
         process.waitFor();

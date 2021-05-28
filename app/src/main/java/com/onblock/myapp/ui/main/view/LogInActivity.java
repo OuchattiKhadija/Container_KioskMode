@@ -10,7 +10,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.onblock.myapp.R;
-import com.onblock.myapp.controllers.KioskManager;
 
 import static com.onblock.myapp.ui.main.view.MainActivity.LOCK_ACTIVITY_KEY;
 
@@ -27,7 +26,6 @@ public class LogInActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                    //MainActivity.setKioskPolicies(false);
                     Intent intent = new Intent(LogInActivity.this, AdminHomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra(LOCK_ACTIVITY_KEY, false);

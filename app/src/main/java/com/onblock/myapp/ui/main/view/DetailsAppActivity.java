@@ -200,7 +200,6 @@ public class DetailsAppActivity extends AppCompatActivity {
         sectionList.add(new PermissionSections("Denied", getDeniedPermList()));
     }
 
-
     private void SetOnAdapterPermissionList() {
         adapter = new PermissionListAdapter(sectionList);
         mainRecyclerView.setHasFixedSize(true);

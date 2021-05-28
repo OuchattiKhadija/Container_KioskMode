@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
         android:text="Admin Name"
-        android:textColor="@color/colorAccent" />
+        android:textColor="@color/blueTxt" />
 
     <EditText
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
         android:text="Password"
-        android:textColor="@color/colorAccent" />
+        android:textColor="@color/blueTxt" />
 
     <EditText
         android:layout_width="match_parent"

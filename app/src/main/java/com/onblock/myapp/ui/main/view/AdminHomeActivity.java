@@ -43,7 +43,7 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
     static AppInfoViewModel appInfoViewModel;
     AdminListAppAdapter adapter;
 
-
+    public boolean aBoolean = false;
     private long backPressedTime;
     private Toast backToast;
 
@@ -100,7 +100,14 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
             out.println("execute else statement");
             //SetOnAdapterAppList();
         }
-        SetOnAdapterAppListInstalled();
+
+        if (!aBoolean){
+            SetOnAdapterAppListInstalled();
+        }else{
+            SetOnAdapterSystemAppList();
+        }
+
+
         adapter.setOnItemClickListener(new AdminListAppAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(AppInfo appInfo) {
@@ -110,9 +117,7 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
                 startActivity(intent);
             }
         });
-
         kioskManager = new KioskManager(this);
-
     }
 
     @Override
@@ -236,7 +241,7 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
         return true;
     }
 
-    public boolean b = false;
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -248,13 +253,13 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
 
             case R.id.SystemApp:
                 if (item.isChecked()) {
-                    b = false;
+                    aBoolean = false;
                     item.setChecked(false);
                     SetOnAdapterAppListInstalled();
                     Toast.makeText(AdminHomeActivity.this, "Hide System Apps ", Toast.LENGTH_SHORT).show();
                 } else {
                     item.setChecked(true);
-                    b = true;
+                    aBoolean = true;
                     SetOnAdapterSystemAppList();
                     Toast.makeText(AdminHomeActivity.this, "Show System Apps ", Toast.LENGTH_SHORT).show();
                 }
@@ -277,12 +282,18 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
             case R.id.exitKiosk:
                 if (!item.isChecked()) {
                     item.setChecked(true);
+                    AppInfoController.clearDeviceOwner(getApplication());
                    // item.setTitle("Enable Kiosk Mode ");
-                    Intent intent = new Intent(this, MainActivity.class);
+                   /* Intent intent = new Intent(this, MainActivity.class);
                     intent.removeCategory("android.intent.category.HOME");
                     intent.removeCategory("android.intent.category.DEFAULT");
-                    kioskManager.setKioskPolicies(false);
+                    kioskManager.setKioskPolicies(false);*/
                 }
+
+            case R.id.settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -291,7 +302,7 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        if (b) {
+        if (aBoolean) {
             if (query != null) {
                 searchSystemApp(query);
             }
@@ -306,7 +317,7 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
 
     @Override
     public boolean onQueryTextChange(String query) {
-        if (b) {
+        if (aBoolean) {
             if (query != null) {
                 searchSystemApp(query);
             }
