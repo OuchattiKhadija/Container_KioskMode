@@ -31,10 +31,10 @@ public interface AppInfoDao {
     @Query("DELETE FROM appInfo_table")
     void deleteAllApps();
 
-    @Query("SELECT * FROM appInfo_table WHERE isSystemApp = 1 ORDER BY name DESC ")
+    @Query("SELECT * FROM appInfo_table WHERE itCanBeOpned = 0 ORDER BY name DESC ")
     LiveData<List<AppInfo>> getAllASystempps();
 
-    @Query("SELECT * FROM appInfo_table Where isSystemApp = 0 ORDER BY name DESC")
+    @Query("SELECT * FROM appInfo_table Where itCanBeOpned = 1 ORDER BY name DESC")
     LiveData<List<AppInfo>> getInstalledApps();
 
     @Query("SELECT * FROM appInfo_table WHERE isNormalUserAllowed = 1 ORDER BY name ")
@@ -49,14 +49,17 @@ public interface AppInfoDao {
     @Query("SELECT packageName FROM appInfo_table ")
     List<String> getAllPackages();
 
-    @Query("SELECT * FROM appInfo_table WHERE (name LIKE  :str OR  packageName LIKE  :str) AND isSystemApp = 0 ")
+    @Query("SELECT * FROM appInfo_table WHERE (name LIKE  :str OR  packageName LIKE  :str) AND itCanBeOpned = 1 ")
     LiveData<List<AppInfo>> getSearchResults(String str);
 
     @Query("UPDATE appInfo_table SET isNormalUserAllowed = 0")
     void deniedAllApps();
 
-    @Query("SELECT * FROM appInfo_table WHERE (name LIKE  :str OR  packageName LIKE  :str) AND isSystemApp = 1 ")
+    @Query("SELECT * FROM appInfo_table WHERE (name LIKE  :str OR  packageName LIKE  :str) AND itCanBeOpned = 0 ")
     LiveData<List<AppInfo>> getSearchResultsSystemAPP(String str);
+
+    @Query("SELECT * FROM appInfo_table WHERE name LIKE  :str  AND isNormalUserAllowed = 1 ")
+    LiveData<List<AppInfo>> getSearchResultsForUser(String str);
 
     /**
 

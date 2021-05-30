@@ -72,6 +72,10 @@ public class AppInfoRepository {
         return appInfoDao.getSearchResultsSystemAPP(name);
     }
 
+    public LiveData<List<AppInfo>> getSearchResultsForUser(String name) {
+        return appInfoDao.getSearchResultsForUser(name);
+    }
+
 
     private static class InsertAppAsyncTask extends AsyncTask<AppInfo, Void, Void> {
         private AppInfoDao appInfoDao;

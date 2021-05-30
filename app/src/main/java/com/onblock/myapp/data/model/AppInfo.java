@@ -29,8 +29,8 @@ public class AppInfo {
     @ColumnInfo(name = "versionCode")
     private int versionCode;
 
-    @ColumnInfo(name = "isSystemApp")
-    private boolean isSystemApp;
+    @ColumnInfo(name = "itCanBeOpned")
+    private boolean itCanBeOpned;
 
     //Constructor
 
@@ -38,14 +38,14 @@ public class AppInfo {
     //  public AppInfo() {
     // }
 
-    public AppInfo(@NonNull String packageName, String name, String versionName, int versionCode, byte[] icon, boolean isNormalUserAllowed, boolean isSystemApp) {
+    public AppInfo(@NonNull String packageName, String name, String versionName, int versionCode, byte[] icon, boolean isNormalUserAllowed, boolean itCanBeOpned) {
         this.packageName = packageName;
         this.name = name;
         this.isNormalUserAllowed = isNormalUserAllowed;
         this.versionName = versionName;
         this.icon = icon;
         this.versionCode = versionCode;
-        this.isSystemApp = isSystemApp;
+        this.itCanBeOpned = itCanBeOpned;
     }
 
 
@@ -98,8 +98,8 @@ public class AppInfo {
         isNormalUserAllowed = isAllowed;
     }
 
-    public boolean isSystemApp() {
-        return isSystemApp;
+    public boolean itCanBeOpned() {
+        return itCanBeOpned;
     }
 }
 

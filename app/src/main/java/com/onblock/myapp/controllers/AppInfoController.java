@@ -6,9 +6,11 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -29,6 +31,21 @@ import static java.lang.System.out;
 public class AppInfoController {
 
     static ArrayList<AppInfo> appInfoList = new ArrayList<AppInfo>();
+
+    public static List<String> getInstalledAppListTest(Activity activity) {
+        List<String> list = new ArrayList<>();
+
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> untreatedAppList = activity.getApplicationContext().getPackageManager().queryIntentActivities(intent, 0);
+        for(ResolveInfo untreatedApp : untreatedAppList){
+            String appPackageName = untreatedApp.activityInfo.packageName;
+//    String packageName, String name, String versionName, int versionCode, byte[] icon, boolean isNormalUserAllowed, boolean itCanBeOpned)
+            if (!list.contains(appPackageName))
+                list.add(appPackageName);
+        }
+        return list;
+    }
 
     @SuppressLint("WrongConstant")
     public static ArrayList<AppInfo> getAppInfoList(Activity a) {
@@ -52,7 +69,7 @@ public class AppInfoController {
                     p.versionName,
                     p.versionCode, AppInfoController.drawable2Bytes((p.applicationInfo.loadIcon(a.getPackageManager()))),
                     false,
-                    (app.flags & ApplicationInfo.FLAG_SYSTEM) != 0 | (app.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0);
+                    getInstalledAppListTest(a).contains(p.packageName));
             appInfoList.add(appInfo);
         }
         return appInfoList;
@@ -174,6 +191,9 @@ public class AppInfoController {
         Process process = Runtime.getRuntime().exec(command);
         process.waitFor();
     }
+
+
+
 
 }
 

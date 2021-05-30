@@ -69,4 +69,8 @@ public class AppInfoViewModel extends AndroidViewModel {
         return repository.getInstalledApps();
     }
 
+    public LiveData<List<AppInfo>> getSearchResultsForUser(String name) {
+        return repository.getSearchResultsForUser(name);
+    }
+
 }

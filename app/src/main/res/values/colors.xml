@@ -8,5 +8,6 @@
     <color name="red">#FF0000</color>
     <color name="blueTxt">#77acf1</color>
     <color name="custTransparent">#CFFF</color>
+    <color name="gray_500">#9E9E9E</color>
 
 </resources>

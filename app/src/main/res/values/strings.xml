@@ -13,6 +13,7 @@
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
+    <string name="home_settings">Home Settings</string>
 
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>

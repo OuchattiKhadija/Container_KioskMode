@@ -10,9 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -63,7 +61,6 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
         //progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
 
 
-
         adapter = new AdminListAppAdapter();
 
         appInfoViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(AppInfoViewModel.class);
@@ -101,9 +98,9 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
             //SetOnAdapterAppList();
         }
 
-        if (!aBoolean){
+        if (!aBoolean) {
             SetOnAdapterAppListInstalled();
-        }else{
+        } else {
             SetOnAdapterSystemAppList();
         }
 
@@ -212,7 +209,7 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
                             pinfo.versionCode,
                             AppInfoController.drawable2Bytes(pm.getApplicationIcon(pack)),
                             false,
-                            (app.flags & ApplicationInfo.FLAG_SYSTEM) != 0 | (app.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0);
+                            AppInfoController.getInstalledAppListTest(this).contains(pinfo.packageName));
 
                     appInfoViewModel.insert(newAppInfo);
                 } catch (PackageManager.NameNotFoundException e) {
@@ -240,7 +237,6 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
 
         return true;
     }
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -283,7 +279,7 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
                 if (!item.isChecked()) {
                     item.setChecked(true);
                     AppInfoController.clearDeviceOwner(getApplication());
-                   // item.setTitle("Enable Kiosk Mode ");
+                    // item.setTitle("Enable Kiosk Mode ");
                    /* Intent intent = new Intent(this, MainActivity.class);
                     intent.removeCategory("android.intent.category.HOME");
                     intent.removeCategory("android.intent.category.DEFAULT");
@@ -353,12 +349,12 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
         });
     }
 
-    private ProgressDialog initProgressDialog(){
-       ProgressDialog progressDialog = new ProgressDialog(AdminHomeActivity.this);
+    private ProgressDialog initProgressDialog() {
+        ProgressDialog progressDialog = new ProgressDialog(AdminHomeActivity.this);
         progressDialog.setMessage("Loading..."); // Setting Message
         progressDialog.setTitle("ProgressDialog"); // Setting Title
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Spinner
-      //  progressDialog.show(); // Display Progress Dialog
+        //  progressDialog.show(); // Display Progress Dialog
         progressDialog.setCancelable(false);
 
         return progressDialog;

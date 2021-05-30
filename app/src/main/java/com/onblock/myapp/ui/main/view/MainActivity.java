@@ -4,11 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Display;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,23 +22,20 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ft.possystem.PosSystemManager;
 import com.onblock.myapp.R;
 import com.onblock.myapp.controllers.KioskManager;
 import com.onblock.myapp.data.model.AppInfo;
 import com.onblock.myapp.ui.main.adapter.UserAppAdapter;
 import com.onblock.myapp.ui.main.viewModel.AppInfoViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.System.out;
 
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView appGrideView;
     AppInfoViewModel appInfoViewModel;
     UserAppAdapter adapter;
+    EditText searchUser;
 
     public static KioskManager kioskManager;
 
@@ -50,6 +49,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        searchUser = findViewById(R.id.editSearchUser);
+        searchUser.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                searchAppUser(editable);
+
+            }
+        });
+
 
         // Now get a handle to any View contained
         // within the main layout you are using
@@ -65,7 +85,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (kioskManager.getmDevicePolicyManager().isDeviceOwnerApp(getPackageName())) {
             // You are the owner!
-          //  kioskManager.setKioskPolicies(true);
+
+             kioskManager.setKioskPolicies(true);
         } else {
             // Please contact your system administrator
             Toast.makeText(this, "Please contact your system administrator,  App is not the Owner", Toast.LENGTH_LONG);
@@ -93,7 +114,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
+
 
     final GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
         public void onLongPress(MotionEvent e) {
@@ -113,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         if (kioskManager.getmDevicePolicyManager().isDeviceOwnerApp(getPackageName())) {
             // You are the owner!
-        //    kioskManager.setKioskPolicies(true);
+                kioskManager.setKioskPolicies(true);
         } else {
             // Please contact your system administrator
             Toast.makeText(this, "Please contact your system administrator , App is not the Owner", Toast.LENGTH_LONG).show();
@@ -129,12 +152,9 @@ public class MainActivity extends AppCompatActivity {
     private void getAllowdedAppList() {
 
         appGrideView.setHasFixedSize(true);
-        int nuOfRows = (int) sizeScreen() / 190;
-        out.println("Liigne  "+nuOfRows);
-       //out.println ("siiize "+appInfoViewModel.getAllGrantedApp().getValue().size());
-        //int mNoOfColumns = AppInfoController.calculateNoOfRows(this,120);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), nuOfRows);
-        gridLayoutManager.setOrientation(GridLayoutManager.HORIZONTAL); // set Horizontal Orientation
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 4);
+        //  gridLayoutManager.setOrientation(GridLayoutManager.HORIZONTAL); // set Horizontal Orientation
         appGrideView.setLayoutManager(gridLayoutManager);
 
         appGrideView.setAdapter(adapter);
@@ -151,13 +171,28 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public int sizeScreen() {
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        int height = displaymetrics.heightPixels;
-        out.println("heiight ==> " + height);
-        return height;
+    private void searchAppUser(Editable editable) {
+        String searchQuery = "%" + editable + "%";
 
+        appInfoViewModel.getSearchResultsForUser(searchQuery).observe(this, new Observer<List<AppInfo>>() {
+            @Override
+            public void onChanged(@Nullable List<AppInfo> appInfos) {
+                adapter.setGrantedApps(appInfos);
+            }
+        });
+    }
+
+    @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Toast.makeText(MainActivity.this, "Package Not found", Toast.LENGTH_SHORT);
+            System.out.println("Back button long pressed");
+            Intent intent = new Intent(MainActivity.this, LogInActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onKeyLongPress(keyCode, event);
     }
 }
 
