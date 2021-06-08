@@ -6,14 +6,15 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.onblock.myapp.data.dao.AppInfoDao;
 import com.onblock.myapp.data.model.AppInfo;
-import com.onblock.myapp.data.model.AppInfoDao;
 
-@Database(entities = {AppInfo.class}, version = 1)
+@Database(entities = {AppInfo.class}, version = 2)
 public abstract class AppDb extends RoomDatabase {
     private static AppDb instance;
 
     public abstract AppInfoDao appInfoDao();
+
 
     // Get a database instance &&     Create the database
     public static synchronized AppDb getDatabaseInstance(final Context context) {

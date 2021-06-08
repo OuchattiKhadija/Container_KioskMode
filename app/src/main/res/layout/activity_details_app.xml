@@ -140,7 +140,7 @@
             android:layout_weight="1"
             android:background="@color/white"
             android:text="Allow"
-            android:textColor="@color/limegreen" />
+            android:textColor="@color/colorGreenAllow" />
 
         <Button
             android:id="@+id/deny_btn"

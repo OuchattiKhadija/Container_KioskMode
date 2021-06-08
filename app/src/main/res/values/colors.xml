@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#04009a</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorPrimaryDark">#0226A9</color>
+    <color name="colorPrimary">#0437F2</color>
+    <color name="colorAccent">#00BFFF</color>
     <color name="white">#FFFFFF</color>
     <color name="limegreen">#32CD32</color>
     <color name="red">#FF0000</color>
     <color name="blueTxt">#77acf1</color>
     <color name="custTransparent">#CFFF</color>
     <color name="gray_500">#9E9E9E</color>
+    <color name="black">#000000</color>
+
+    <!--Svitch Colors-->
+    <color name="disable_forground_grey">#42221f1f</color>
+    <color name="disable_thimb_grey">#1c000000</color>
+    <color name="enable_thimb_green">@color/colorPrimary</color>
+    <color name="colorGreenAllow">#228B22</color>
 
 </resources>

@@ -3,7 +3,7 @@
     android:id="@+id/main_act"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/default_image"
+    android:background="@drawable/default_image1"
     android:gravity="center">
 
     <LinearLayout
@@ -23,10 +23,9 @@
             android:drawableLeft="@drawable/ic_search"
             android:drawableTint="@color/colorPrimaryDark"
             android:ems="10"
-            android:fontFamily="monospace"
-            android:gravity="center"
-            android:hint="Find Apps"
-            android:textColorHint="@color/colorPrimaryDark" />
+            android:fontFamily="serif"
+            android:hint="  Find Apps"
+            android:textColorHint="@color/gray_500" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/gridApps"

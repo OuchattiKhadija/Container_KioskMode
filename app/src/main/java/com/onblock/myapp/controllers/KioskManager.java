@@ -137,6 +137,7 @@ public class KioskManager {
             IntentFilter intentFilter = new IntentFilter("android.intent.action.MAIN");
             intentFilter.addCategory("android.intent.category.HOME");
             intentFilter.addCategory("android.intent.category.DEFAULT");
+            
             mDevicePolicyManager.addPersistentPreferredActivity(
                     mAdminComponentName, intentFilter, new ComponentName(activity.getPackageName(), MainActivity.class.getName()));
         } else {

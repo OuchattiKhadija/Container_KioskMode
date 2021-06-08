@@ -1,48 +1,61 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/messages_header">
-
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
-
-        <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/sync_header">
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/home_settings">
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/home_settings">
 
         <Preference
-            app:title="Choose Home Screen image"
-            app:useSimpleSummaryProvider="true"
+            android:icon="@drawable/ic_wallpaper"
             android:key="browsef"
-            android:summary="Browse files"/>
+            android:summary="Browse files"
+            app:title="Home Screen image"
+            app:useSimpleSummaryProvider="true" />
 
+
+        <Preference
+            android:icon="@drawable/ic_grid"
+            android:key="sizeScreen"
+            android:summary="Set numbre Collumns and Rows on Home Screen"
+            app:title="Home Screen Size"
+            app:useSimpleSummaryProvider="true" />
+
+        <SeekBarPreference
+            android:defaultValue="@integer/seek_bar_default"
+            android:icon="@drawable/ic_font"
+            android:key="textSize"
+            app:title="Text size" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            android:icon="@drawable/ic_reset"
+            android:key="reset"
+            android:summary="Return to default configuration"
+            app:title="Reset app"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+
+    <PreferenceCategory>
+
+        <Preference
+            android:icon="@drawable/ic_info"
+            android:key="about"
+            android:summary=""
+            app:title="About"
+            app:useSimpleSummaryProvider="true" />
+
+        <Preference
+            android:icon="@drawable/ic_help"
+            android:key="help"
+            android:summary=""
+            app:title="Help &amp; Feedback"
+            app:useSimpleSummaryProvider="true" />
 
 
     </PreferenceCategory>
+
 
 </PreferenceScreen>

@@ -1,13 +1,14 @@
 package com.onblock.myapp.data.repository;
 
 import android.app.Application;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
 import com.onblock.myapp.data.AppDb;
+import com.onblock.myapp.data.dao.AppInfoDao;
 import com.onblock.myapp.data.model.AppInfo;
-import com.onblock.myapp.data.model.AppInfoDao;
 
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class AppInfoRepository {
         return appInfoDao.getInstalledApps();
     }
 
-    public void deniedAllApps(){
+    public void deniedAllApps() {
         appInfoDao.deniedAllApps();
     }
 
@@ -79,6 +80,7 @@ public class AppInfoRepository {
 
     private static class InsertAppAsyncTask extends AsyncTask<AppInfo, Void, Void> {
         private AppInfoDao appInfoDao;
+        ProgressDialog progressDialog;
 
         private InsertAppAsyncTask(AppInfoDao appInfoDao) {
             this.appInfoDao = appInfoDao;
@@ -89,6 +91,8 @@ public class AppInfoRepository {
             appInfoDao.insert(appInfos[0]);
             return null;
         }
+
+
     }
 
     private static class UpdateAppAsyncTask extends AsyncTask<AppInfo, Void, Void> {

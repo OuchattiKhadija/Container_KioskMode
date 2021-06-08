@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import org.jetbrains.annotations.NotNull;
+
 
 @Entity(tableName = "appInfo_table")
 public class AppInfo {
@@ -32,13 +34,16 @@ public class AppInfo {
     @ColumnInfo(name = "itCanBeOpned")
     private boolean itCanBeOpned;
 
+    @ColumnInfo(name = "isTheContainer")
+    private boolean isTheContainer;
+
     //Constructor
 
     //before DB
     //  public AppInfo() {
     // }
 
-    public AppInfo(@NonNull String packageName, String name, String versionName, int versionCode, byte[] icon, boolean isNormalUserAllowed, boolean itCanBeOpned) {
+    public AppInfo(@NonNull String packageName, String name, String versionName, int versionCode, byte[] icon, boolean isNormalUserAllowed, boolean itCanBeOpned,boolean isTheContainer) {
         this.packageName = packageName;
         this.name = name;
         this.isNormalUserAllowed = isNormalUserAllowed;
@@ -62,6 +67,7 @@ public class AppInfo {
         return icon;
     }
 
+    @NotNull
     public String getPackageName() {
         return packageName;
     }
@@ -100,6 +106,19 @@ public class AppInfo {
 
     public boolean itCanBeOpned() {
         return itCanBeOpned;
+    }
+
+
+    public void setItCanBeOpned(boolean itCanBeOpned) {
+        this.itCanBeOpned = itCanBeOpned;
+    }
+
+    public boolean isTheContainer() {
+        return isTheContainer;
+    }
+
+    public void setIsTheContainer(boolean theContainer) {
+        isTheContainer = theContainer;
     }
 }
 

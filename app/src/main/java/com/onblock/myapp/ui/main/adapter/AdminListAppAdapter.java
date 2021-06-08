@@ -8,6 +8,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.onblock.myapp.R;
@@ -70,7 +71,7 @@ public class AdminListAppAdapter extends RecyclerView.Adapter<AdminListAppAdapte
     class AdminViewHolder extends RecyclerView.ViewHolder {
         TextView appName, appPackage;
         ImageView appIcon;
-        Switch checked;
+        SwitchCompat checked;
 
         public AdminViewHolder(@NonNull View itemView) {
             super(itemView);

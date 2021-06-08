@@ -109,10 +109,11 @@ public class DetailsAppActivity extends AppCompatActivity {
         uninstallApp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_DELETE);
+                Toast.makeText(DetailsAppActivity.this,"unistall",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE);
                 intent.setData(Uri.parse("package:" + EXTRA_APP_PACKAGE));
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                intent.putExtra(Intent.EXTRA_RETURN_RESULT,true);
+                startActivityForResult(intent,100);
             }
         });
     }

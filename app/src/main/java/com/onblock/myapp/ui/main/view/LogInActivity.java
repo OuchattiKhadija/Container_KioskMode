@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.onblock.myapp.R;
 
 import static com.onblock.myapp.ui.main.view.MainActivity.LOCK_ACTIVITY_KEY;
+import static com.onblock.myapp.ui.main.view.MainActivity.kioskManager;
 
 public class LogInActivity extends AppCompatActivity {
 
@@ -29,6 +30,7 @@ public class LogInActivity extends AppCompatActivity {
                     Intent intent = new Intent(LogInActivity.this, AdminHomeActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra(LOCK_ACTIVITY_KEY, false);
+                   // kioskManager.getmDevicePolicyManager().setStatusBarDisabled(kioskManager.getmAdminComponentName(), false);
                     startActivity(intent);
                 }
         });

@@ -1,7 +1,9 @@
 package com.onblock.myapp.ui.main.view;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -23,12 +25,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.onblock.myapp.R;
+import com.onblock.myapp.controllers.AppInfoController;
 import com.onblock.myapp.controllers.KioskManager;
 import com.onblock.myapp.data.model.AppInfo;
 import com.onblock.myapp.ui.main.adapter.UserAppAdapter;
 import com.onblock.myapp.ui.main.viewModel.AppInfoViewModel;
 
 import java.util.List;
+
+import static java.lang.System.out;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -39,16 +44,24 @@ public class MainActivity extends AppCompatActivity {
 
     public static KioskManager kioskManager;
 
+    SharedPreferences sharedPreferences;
+    View v;
+
 
     @NonNull
     public static final String LOCK_ACTIVITY_KEY = "com.onblock.myapp.ui.main.view.MainActivity";
 
-    @SuppressLint("ResourceAsColor")
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        v = findViewById(R.id.main_act);
+
+
+        //   v.setBackground(AppInfoController.bitmap2Drawable(backgroundResize(AppInfoController.bytes2Bitmap(screenViewModel.getWallpaper(0)))));
+
 
         searchUser = findViewById(R.id.editSearchUser);
         searchUser.addTextChangedListener(new TextWatcher() {
@@ -86,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         if (kioskManager.getmDevicePolicyManager().isDeviceOwnerApp(getPackageName())) {
             // You are the owner!
 
-             kioskManager.setKioskPolicies(true);
+            kioskManager.setKioskPolicies(true);
         } else {
             // Please contact your system administrator
             Toast.makeText(this, "Please contact your system administrator,  App is not the Owner", Toast.LENGTH_LONG);
@@ -134,14 +147,35 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onStart() {
+        super.onStart();
         if (kioskManager.getmDevicePolicyManager().isDeviceOwnerApp(getPackageName())) {
             // You are the owner!
-                kioskManager.setKioskPolicies(true);
+            kioskManager.setKioskPolicies(true);
         } else {
             // Please contact your system administrator
             Toast.makeText(this, "Please contact your system administrator , App is not the Owner", Toast.LENGTH_LONG).show();
         }
-        super.onStart();
+
+        sharedPreferences = getApplicationContext().getSharedPreferences("screenPref", Context.MODE_PRIVATE);
+        String sCols = sharedPreferences.getString("numbCols", "");
+        String sRows = sharedPreferences.getString("numbRows", "");
+        int cols, rows;
+        if (!sCols.isEmpty() && !sRows.isEmpty()) {
+            cols = Integer.parseInt(sCols);
+            rows = Integer.parseInt(sRows);
+        } else {
+            cols = 4;
+            rows = 7;
+        }
+
+        String pathImg = sharedPreferences.getString("imagePath", "");
+        if (!pathImg.isEmpty()) {
+
+            v.setBackground(AppInfoController.uriToDrawableCon(this, Uri.parse(pathImg)));
+        }
+
+        Toast.makeText(this, "" + cols + " " + rows, Toast.LENGTH_LONG).show();
+
     }
 
     @Override
@@ -186,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             Toast.makeText(MainActivity.this, "Package Not found", Toast.LENGTH_SHORT);
-            System.out.println("Back button long pressed");
+            out.println("Back button long pressed");
             Intent intent = new Intent(MainActivity.this, LogInActivity.class);
             startActivity(intent);
             return true;
@@ -194,5 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onKeyLongPress(keyCode, event);
     }
+
+
 }
 

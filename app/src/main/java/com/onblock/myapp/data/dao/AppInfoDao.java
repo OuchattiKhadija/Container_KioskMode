@@ -1,4 +1,4 @@
-package com.onblock.myapp.data.model;
+package com.onblock.myapp.data.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -6,6 +6,8 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
+
+import com.onblock.myapp.data.model.AppInfo;
 
 import java.util.List;
 
@@ -31,13 +33,13 @@ public interface AppInfoDao {
     @Query("DELETE FROM appInfo_table")
     void deleteAllApps();
 
-    @Query("SELECT * FROM appInfo_table WHERE itCanBeOpned = 0 ORDER BY name DESC ")
+    @Query("SELECT * FROM appInfo_table WHERE( itCanBeOpned = 0 AND isTheContainer = 0) ORDER BY name DESC ")
     LiveData<List<AppInfo>> getAllASystempps();
 
-    @Query("SELECT * FROM appInfo_table Where itCanBeOpned = 1 ORDER BY name DESC")
+    @Query("SELECT * FROM appInfo_table Where (itCanBeOpned = 1 AND isTheContainer = 0) ORDER BY name DESC")
     LiveData<List<AppInfo>> getInstalledApps();
 
-    @Query("SELECT * FROM appInfo_table WHERE isNormalUserAllowed = 1 ORDER BY name ")
+    @Query("SELECT * FROM appInfo_table WHERE (isNormalUserAllowed = 1 AND isTheContainer = 0) ORDER BY name ")
     LiveData<List<AppInfo>> getAllGrantedApp();
 
     @Query("DELETE FROM appInfo_table WHERE packageName = :pn")
@@ -49,16 +51,16 @@ public interface AppInfoDao {
     @Query("SELECT packageName FROM appInfo_table ")
     List<String> getAllPackages();
 
-    @Query("SELECT * FROM appInfo_table WHERE (name LIKE  :str OR  packageName LIKE  :str) AND itCanBeOpned = 1 ")
+    @Query("SELECT * FROM appInfo_table WHERE (name LIKE  :str OR  packageName LIKE  :str) AND isTheContainer = 0 AND itCanBeOpned = 1 ")
     LiveData<List<AppInfo>> getSearchResults(String str);
 
     @Query("UPDATE appInfo_table SET isNormalUserAllowed = 0")
     void deniedAllApps();
 
-    @Query("SELECT * FROM appInfo_table WHERE (name LIKE  :str OR  packageName LIKE  :str) AND itCanBeOpned = 0 ")
+    @Query("SELECT * FROM appInfo_table WHERE (name LIKE  :str OR  packageName LIKE  :str)  AND isTheContainer = 0 AND itCanBeOpned = 0 ")
     LiveData<List<AppInfo>> getSearchResultsSystemAPP(String str);
 
-    @Query("SELECT * FROM appInfo_table WHERE name LIKE  :str  AND isNormalUserAllowed = 1 ")
+    @Query("SELECT * FROM appInfo_table WHERE name LIKE  :str  AND isNormalUserAllowed = 1  AND isTheContainer = 0")
     LiveData<List<AppInfo>> getSearchResultsForUser(String str);
 
     /**

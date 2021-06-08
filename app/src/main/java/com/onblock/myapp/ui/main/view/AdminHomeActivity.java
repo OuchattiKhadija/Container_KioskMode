@@ -47,7 +47,7 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
 
     public static KioskManager kioskManager;
 
-    ProgressDialog progressDialog;
+    public static ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,9 +209,13 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
                             pinfo.versionCode,
                             AppInfoController.drawable2Bytes(pm.getApplicationIcon(pack)),
                             false,
-                            AppInfoController.getInstalledAppListTest(this).contains(pinfo.packageName));
+                            AppInfoController.getInstalledAppListTest(this).contains(pinfo.packageName), false);
 
                     appInfoViewModel.insert(newAppInfo);
+
+                    AppInfo thisApp = appInfoViewModel.getFromPackage(this.getPackageName());
+                    thisApp.setIsTheContainer(true);
+                    appInfoViewModel.update(thisApp);
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -287,8 +291,8 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
                 }
 
             case R.id.settings:
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
+               Intent intent = new Intent(this, SettingsActivity.class);
+               startActivity(intent);
                 return true;
 
             default:

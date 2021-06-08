@@ -73,4 +73,6 @@ public class AppInfoViewModel extends AndroidViewModel {
         return repository.getSearchResultsForUser(name);
     }
 
+
+
 }
