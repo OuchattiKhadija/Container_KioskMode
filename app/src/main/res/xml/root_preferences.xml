@@ -31,7 +31,7 @@
     <PreferenceCategory>
         <Preference
             android:icon="@drawable/ic_reset"
-            android:key="reset"
+            android:key="resetConf"
             android:summary="Return to default configuration"
             app:title="Reset app"
             app:useSimpleSummaryProvider="true" />

@@ -22,6 +22,7 @@
             android:background="@drawable/shape_search_main"
             android:drawableLeft="@drawable/ic_search"
             android:drawableTint="@color/colorPrimaryDark"
+            android:drawablePadding="8dp"
             android:ems="10"
             android:fontFamily="serif"
             android:hint="  Find Apps"
@@ -34,7 +35,10 @@
             android:paddingTop="10dp"
             android:stretchMode="columnWidth"
             tools:listitem="@layout/grid_app_item" />
+
+
     </LinearLayout>
+
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
