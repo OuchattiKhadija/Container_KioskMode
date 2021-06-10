@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     View v;
     View root;
 
-
+    int nCols;
 
     @NonNull
     public static final String LOCK_ACTIVITY_KEY = "com.onblock.myapp.ui.main.view.MainActivity";
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
         appInfoViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(AppInfoViewModel.class);
 
-        getAllowdedAppList();
+
 
         adapter.setOnItemClickListener(new UserAppAdapter.OnItemClickListener() {
             @Override
@@ -159,8 +159,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Please contact your system administrator , App is not the Owner", Toast.LENGTH_SHORT).show();
         }
 
-        int nCols = sharedPreferences.getInt("numbCols", 4);
-        int nRows = sharedPreferences.getInt("numbRows", 5);
+
+
 
         //String pathImg = null;
         String pathImg = sharedPreferences.getString("imgBackground", null);
@@ -175,9 +175,10 @@ public class MainActivity extends AppCompatActivity {
            // Toast.makeText(this, "Path Empty", Toast.LENGTH_SHORT).show();
             v.setBackgroundResource(R.drawable.default_image1);
         }
+         nCols = sharedPreferences.getInt("numbCols", 4);
 
       //  Toast.makeText(this, "" + nCols + " " + nRows, Toast.LENGTH_SHORT).show();
-
+        getAllowdedAppList();
     }
 
     @Override
@@ -188,9 +189,20 @@ public class MainActivity extends AppCompatActivity {
     private void getAllowdedAppList() {
 
         appGrideView.setHasFixedSize(true);
+        GridLayoutManager gridLayoutManager;
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 4);
-        //  gridLayoutManager.setOrientation(GridLayoutManager.HORIZONTAL); // set Horizontal Orientation
+        Toast.makeText(this,"nbCols "+ nCols,Toast.LENGTH_SHORT).show();
+        if(nCols !=0){
+             gridLayoutManager = new GridLayoutManager(getApplicationContext(), nCols);
+            Toast.makeText(this, "ifstatement cols" + nCols, Toast.LENGTH_SHORT).show();
+
+        }
+        else {
+             gridLayoutManager = new GridLayoutManager(getApplicationContext(), 4);
+            Toast.makeText(this, "else statement cols" + nCols, Toast.LENGTH_LONG).show();
+
+        }
+        //GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), nCols);
         appGrideView.setLayoutManager(gridLayoutManager);
 
         appGrideView.setAdapter(adapter);

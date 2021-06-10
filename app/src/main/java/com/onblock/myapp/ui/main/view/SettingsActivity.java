@@ -269,15 +269,12 @@ public class SettingsActivity extends AppCompatActivity {
             // dialog.setContentView(R.layout.dialog_picker_number);
             View vi = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_picker_number, null, false);
             NumberPicker npCols = vi.findViewById(R.id.colms);
-            NumberPicker npRows = vi.findViewById(R.id.rows);
             Button saveChanges = vi.findViewById(R.id.saveChanges);
 
-            npCols.setValue(4);
-            npRows.setValue(5);
-            npCols.setMaxValue(6);
-            npCols.setMinValue(2);
-            npRows.setMaxValue(16);
-            npRows.setMinValue(4);
+
+            npCols.setMaxValue(5);
+            npCols.setMinValue(1);
+
             dialog.setContentView(vi);
             dialog.show();
 
@@ -286,11 +283,11 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     int valueCols = npCols.getValue();
-                    int valueRows = npRows.getValue();
+
                     editor.putInt("numbCols", valueCols);
-                    editor.putInt("numbRows", valueRows);
+
                     editor.commit();
-                    Toast.makeText(getActivity(), " " + valueCols + " " + valueRows + " ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), " " + valueCols + " " , Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
             });

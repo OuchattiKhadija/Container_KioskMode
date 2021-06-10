@@ -13,7 +13,6 @@ import android.view.WindowManager;
 
 import androidx.annotation.RequiresApi;
 
-import com.ft.possystem.PosSystemManager;
 import com.onblock.myapp.ui.main.view.MainActivity;
 
 import static android.content.Context.DEVICE_POLICY_SERVICE;
@@ -31,8 +30,6 @@ public class KioskManager {
         mAdminComponentName = new ComponentName( activity, MyDeviceAdminReceiver.class);
         //mAdminComponentName = MyDeviceAdminReceiver.getComponentName(activity);
         mDevicePolicyManager = (DevicePolicyManager) activity.getSystemService(DEVICE_POLICY_SERVICE);    // Initializing device policy manager
-        PosSystemManager.getInstance(activity).getPosApplication().setActiveAdmin(mAdminComponentName);
-        //PosSystemManager.getInstance(this).getPosApplication().disableApplication(getPackageName(), true);
 
     }
 
@@ -196,8 +193,5 @@ public class KioskManager {
 
     }
 
-    public final void disableApp(String pkg){
-         PosSystemManager.getInstance(activity).getPosApplication().disableApplication(pkg, true);
-    }
 
 }
