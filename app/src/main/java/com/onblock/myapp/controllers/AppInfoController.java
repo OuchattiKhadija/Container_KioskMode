@@ -129,9 +129,9 @@ public class AppInfoController {
         return d;
     }
 
-    public static byte[] imagemTratada(byte[] imagem_img){
+    public static byte[] imagemTratada(byte[] imagem_img) {
 
-        while (imagem_img.length > 500000){
+        while (imagem_img.length > 500000) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(imagem_img, 0, imagem_img.length);
             Bitmap resized = Bitmap.createScaledBitmap(bitmap, 400, 900, true);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -148,9 +148,6 @@ public class AppInfoController {
         DevicePolicyManager devicePolicyManager = (DevicePolicyManager) application.getSystemService(Context.DEVICE_POLICY_SERVICE);
         devicePolicyManager.clearDeviceOwnerApp(application.getPackageName());
     }
-
-
-
 
 
 }

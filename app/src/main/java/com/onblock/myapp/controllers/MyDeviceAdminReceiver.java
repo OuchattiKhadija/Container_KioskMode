@@ -29,5 +29,4 @@ public class MyDeviceAdminReceiver extends DeviceAdminReceiver {
         Log.d(TAG, "onLockTaskModeExiting");
     }
 
-
 }

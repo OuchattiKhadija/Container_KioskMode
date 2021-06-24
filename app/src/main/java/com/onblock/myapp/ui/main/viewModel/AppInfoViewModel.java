@@ -74,5 +74,4 @@ public class AppInfoViewModel extends AndroidViewModel {
     }
 
 
-
 }

@@ -1,4 +1,4 @@
-package com.onblock.myapp.ui.main.view;
+package com.onblock.myapp.ui.main.view.activities;
 
 import android.app.Dialog;
 import android.content.ContentResolver;
@@ -39,7 +39,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class SettingsActivity extends AppCompatActivity {
-    public static String TAG = "com.onblock.myapp.ui.main.view.SettingsActivity";
+    public static String TAG = "com.onblock.myapp.ui.main.view.activities.SettingsActivity";
     private static final int PICK_IMAGE = 100;
 
     static SharedPreferences sharedPreferences;
@@ -133,7 +133,7 @@ public class SettingsActivity extends AppCompatActivity {
                     editor.clear();
                     editor.commit(); // commit changes
                     Toast.makeText(getActivity(),
-                            " Clear conf " ,
+                            " Clear conf ",
                             Toast.LENGTH_SHORT).show();
                     return true;
                 }
@@ -287,7 +287,7 @@ public class SettingsActivity extends AppCompatActivity {
                     editor.putInt("numbCols", valueCols);
 
                     editor.commit();
-                    Toast.makeText(getActivity(), " " + valueCols + " " , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), " " + valueCols + " ", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
             });

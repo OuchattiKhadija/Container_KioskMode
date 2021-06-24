@@ -1,4 +1,4 @@
-package com.onblock.myapp.ui.main.view;
+package com.onblock.myapp.ui.main.view.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -38,7 +38,7 @@ import java.util.List;
 import static java.lang.System.out;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity_back extends AppCompatActivity {
     RecyclerView appGrideView;
     AppInfoViewModel appInfoViewModel;
     UserAppAdapter adapter;
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     int nCols;
 
     @NonNull
-    public static final String LOCK_ACTIVITY_KEY = "com.onblock.myapp.ui.main.view.MainActivity";
+    public static final String LOCK_ACTIVITY_KEY = "com.onblock.myapp.ui.main.view.activities.MainActivity";
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -91,11 +91,11 @@ public class MainActivity extends AppCompatActivity {
         // within the main layout you are using
         View someView = findViewById(R.id.gridApps);
         // Find the root view
-         root = someView.getRootView();
+        root = someView.getRootView();
         // Set the color
         //root.setBackgroundColor(getResources().getColor(R.color.custTransparent));
 
-        kioskManager = new KioskManager(MainActivity.this);
+        kioskManager = new KioskManager(MainActivity_back.this);
 
         //AppInfoController.clearDeviceOwner(this);
 
@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
         appInfoViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(AppInfoViewModel.class);
 
 
-
         adapter.setOnItemClickListener(new UserAppAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(AppInfo appInfo) {
@@ -126,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 if (launchIntent != null) {
                     startActivity(launchIntent);//null pointer check in case package name was not found
                 } else {
-                    Toast.makeText(MainActivity.this, "Package Not found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity_back.this, "Package Not found", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -136,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
 
     final GestureDetector gestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
         public void onLongPress(MotionEvent e) {
-            Toast.makeText(MainActivity.this, "Long press detected", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(MainActivity.this, LogInActivity.class);
+            Toast.makeText(MainActivity_back.this, "Long press detected", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity_back.this, LogInActivity.class);
             startActivity(intent);
         }
     });
@@ -160,8 +159,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-
         //String pathImg = null;
         String pathImg = sharedPreferences.getString("imgBackground", null);
         if (pathImg != null) {
@@ -170,14 +167,13 @@ public class MainActivity extends AppCompatActivity {
             Bitmap bitmap = BitmapFactory.decodeFile(pathImg);
             BitmapDrawable bd = new BitmapDrawable(res, bitmap);
             v.setBackground(bd);
-        }
-        else {
-           // Toast.makeText(this, "Path Empty", Toast.LENGTH_SHORT).show();
+        } else {
+            // Toast.makeText(this, "Path Empty", Toast.LENGTH_SHORT).show();
             v.setBackgroundResource(R.drawable.default_image1);
         }
-         nCols = sharedPreferences.getInt("numbCols", 4);
+        nCols = sharedPreferences.getInt("numbCols", 4);
 
-      //  Toast.makeText(this, "" + nCols + " " + nRows, Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(this, "" + nCols + " " + nRows, Toast.LENGTH_SHORT).show();
         getAllowdedAppList();
     }
 
@@ -191,14 +187,13 @@ public class MainActivity extends AppCompatActivity {
         appGrideView.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager;
 
-        Toast.makeText(this,"nbCols "+ nCols,Toast.LENGTH_SHORT).show();
-        if(nCols !=0){
-             gridLayoutManager = new GridLayoutManager(getApplicationContext(), nCols);
+        Toast.makeText(this, "nbCols " + nCols, Toast.LENGTH_SHORT).show();
+        if (nCols != 0) {
+            gridLayoutManager = new GridLayoutManager(getApplicationContext(), nCols);
             Toast.makeText(this, "ifstatement cols" + nCols, Toast.LENGTH_SHORT).show();
 
-        }
-        else {
-             gridLayoutManager = new GridLayoutManager(getApplicationContext(), 4);
+        } else {
+            gridLayoutManager = new GridLayoutManager(getApplicationContext(), 4);
             Toast.makeText(this, "else statement cols" + nCols, Toast.LENGTH_LONG).show();
 
         }
@@ -210,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<AppInfo> appInfos) {
                 if (appInfos.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "No App is Granted!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity_back.this, "No App is Granted!", Toast.LENGTH_SHORT).show();
                     adapter.setGrantedApps(appInfos);
                 } else {
                     adapter.setGrantedApps(appInfos);
@@ -233,9 +228,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            Toast.makeText(MainActivity.this, "Package Not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity_back.this, "Package Not found", Toast.LENGTH_SHORT).show();
             out.println("Back button long pressed");
-            Intent intent = new Intent(MainActivity.this, LogInActivity.class);
+            Intent intent = new Intent(MainActivity_back.this, LogInActivity.class);
             startActivity(intent);
             return true;
         }

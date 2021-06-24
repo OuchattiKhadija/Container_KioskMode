@@ -1,67 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.main.view.LogInActivity">
+    tools:context=".ui.main.view.activities.LogInActivity">
 
-    <TextView
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="com.onblock.myapp.ui.main.view.fragments.FragmentLogin"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginBottom="25dp"
-        android:fontFamily="serif"
-        android:paddingVertical="35dp"
-        android:text="Login"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:shadowDx="@android:integer/config_mediumAnimTime"
-        android:textSize="50sp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="30dp"
-        android:text="Admin Name"
-        android:fontFamily="serif"
-        android:textStyle="bold"
-        android:textSize="10sp"
-        android:textColor="@color/colorAccent" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="30dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="30dp"
-        android:text="Password"
-        android:fontFamily="serif"
-        android:textStyle="bold"
-        android:textSize="10sp"
-        android:textColor="@color/colorAccent"
-        />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="30dp"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="20dp" />
-
-    <Button
-        android:id="@+id/logInAdmin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginVertical="20dp"
-        android:background="@drawable/button_btn"
-        android:text="Login"
-        android:textColor="@color/white" />
-
-</LinearLayout>
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

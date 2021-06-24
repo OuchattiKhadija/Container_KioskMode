@@ -63,7 +63,7 @@ public interface AppInfoDao {
     @Query("SELECT * FROM appInfo_table WHERE name LIKE  :str  AND isNormalUserAllowed = 1  AND isTheContainer = 0")
     LiveData<List<AppInfo>> getSearchResultsForUser(String str);
 
-    /**
+    /*
 
      @Query("UPDATE appInfo_table SET isNormalUserAllowed = :itIs WHERE packageName = :pn ")
      void updateApp(boolean itIs , String pn);
@@ -76,5 +76,5 @@ public interface AppInfoDao {
 
      @Query("SELECT * FROM products")
      LiveData<List<Product>> getAllProducts();
-     **/
+     */
 }

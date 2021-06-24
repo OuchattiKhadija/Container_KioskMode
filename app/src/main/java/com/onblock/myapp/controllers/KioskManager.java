@@ -13,7 +13,7 @@ import android.view.WindowManager;
 
 import androidx.annotation.RequiresApi;
 
-import com.onblock.myapp.ui.main.view.MainActivity;
+import com.onblock.myapp.ui.main.view.activities.MainActivity;
 
 import static android.content.Context.DEVICE_POLICY_SERVICE;
 import static android.os.BatteryManager.BATTERY_PLUGGED_AC;
@@ -27,8 +27,8 @@ public class KioskManager {
 
     public KioskManager(Activity activity) {
         this.activity = activity;
-        mAdminComponentName = new ComponentName( activity, MyDeviceAdminReceiver.class);
-        //mAdminComponentName = MyDeviceAdminReceiver.getComponentName(activity);
+        //mAdminComponentName = new ComponentName(activity, MyDeviceAdminReceiver.class);
+        mAdminComponentName = MyDeviceAdminReceiver.getComponentName(activity);
         mDevicePolicyManager = (DevicePolicyManager) activity.getSystemService(DEVICE_POLICY_SERVICE);    // Initializing device policy manager
 
     }
@@ -46,7 +46,7 @@ public class KioskManager {
     public void setKioskPolicies(boolean enable) {
 
         this.setRestrictions(enable);
-        this.enableStayOnWhilePluggedIn(enable);
+     //   this.enableStayOnWhilePluggedIn(enable);
         this.setUpdatePolicy(enable);
         this.setAsHomeApp(enable);
         this.setKeyGuardEnabled(enable);
@@ -95,8 +95,8 @@ public class KioskManager {
             mDevicePolicyManager.setPackagesSuspended (mAdminComponentName,
                     APP_PACKAGES,
              suspended);*/
-       // final String PLAYER_PACKAGE = "com.example.securityapp";
-       // disableApp(PLAYER_PACKAGE);
+        // final String PLAYER_PACKAGE = "com.example.securityapp";
+        // disableApp(PLAYER_PACKAGE);
     }
 
 
@@ -134,7 +134,7 @@ public class KioskManager {
             IntentFilter intentFilter = new IntentFilter("android.intent.action.MAIN");
             intentFilter.addCategory("android.intent.category.HOME");
             intentFilter.addCategory("android.intent.category.DEFAULT");
-            
+
             mDevicePolicyManager.addPersistentPreferredActivity(
                     mAdminComponentName, intentFilter, new ComponentName(activity.getPackageName(), MainActivity.class.getName()));
         } else {

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @Entity(tableName = "appInfo_table")
 public class AppInfo {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = false)
     @NonNull
     @ColumnInfo(name = "packageName")
     private String packageName;

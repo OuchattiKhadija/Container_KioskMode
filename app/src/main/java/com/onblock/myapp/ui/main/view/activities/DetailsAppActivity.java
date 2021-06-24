@@ -1,4 +1,4 @@
-package com.onblock.myapp.ui.main.view;
+package com.onblock.myapp.ui.main.view.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -38,7 +38,7 @@ public class DetailsAppActivity extends AppCompatActivity {
     AppInfoViewModel appInfoViewModel;
     ImageView appIcon;
     List<PermissionSections> sectionList = new ArrayList<>();
-    TextView appName, appPackage, openApp, uninstallApp, settingsApp;
+    TextView appName, appPackage, openApp, settingsApp;
     RecyclerView mainRecyclerView;
     PermissionListAdapter adapter;
     List<PermissionDetails> grantedPermList = new ArrayList<>();
@@ -54,7 +54,6 @@ public class DetailsAppActivity extends AppCompatActivity {
         appIcon = findViewById(R.id.app_picture);
         appName = findViewById(R.id.app_name);
         openApp = findViewById(R.id.open_app);
-        uninstallApp = findViewById(R.id.app_uninstall);
         settingsApp = findViewById(R.id.app_settings);
         appPackage = findViewById(R.id.package_string);
         mainRecyclerView = findViewById(R.id.perm_recyclerView);
@@ -104,16 +103,6 @@ public class DetailsAppActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = getSettingsIntent(EXTRA_APP_PACKAGE);
                 startActivity(intent);
-            }
-        });
-        uninstallApp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(DetailsAppActivity.this,"unistall",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE);
-                intent.setData(Uri.parse("package:" + EXTRA_APP_PACKAGE));
-                intent.putExtra(Intent.EXTRA_RETURN_RESULT,true);
-                startActivityForResult(intent,100);
             }
         });
     }

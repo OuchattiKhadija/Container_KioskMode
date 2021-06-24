@@ -1,10 +1,12 @@
 package com.onblock.myapp.ui.main.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
@@ -14,39 +16,50 @@ import com.onblock.myapp.R;
 import com.onblock.myapp.controllers.AppInfoController;
 import com.onblock.myapp.data.model.AppInfo;
 import com.onblock.myapp.ui.main.view.activities.AdminHomeActivity;
+import com.onblock.myapp.ui.main.view.activities.AdminListAppCustomPers;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminListAppAdapter extends RecyclerView.Adapter<AdminListAppAdapter.AdminViewHolder> {
+public class ListAppGrpAdapter extends RecyclerView.Adapter<ListAppGrpAdapter.AdminCustListViewHolder> {
 
     List<AppInfo> apps = new ArrayList();
-    private OnItemClickListener listener;
-
+    private AdminListAppAdapter.OnItemClickListener listener;
 
     @NonNull
+    @NotNull
     @Override
-    public AdminViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AdminCustListViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View vi = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_app_item, null, false);
-        AdminViewHolder viewHolder = new AdminViewHolder(vi);
+        ListAppGrpAdapter.AdminCustListViewHolder viewHolder = new ListAppGrpAdapter.AdminCustListViewHolder(vi);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final AdminViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull @NotNull AdminCustListViewHolder holder, int position) {
         final AppInfo currentAppInfo = apps.get(position);
         holder.appName.setText(currentAppInfo.getName());
         holder.appPackage.setText(currentAppInfo.getPackageName());
         holder.appIcon.setImageDrawable(AppInfoController.bytes2Drawable(currentAppInfo.getIcon()));
-
-        holder.checked.setChecked(apps.get(position).getIsNormalUserAllowed());
+        if (AdminListAppCustomPers.isGroupAllowedChecked(currentAppInfo.getPackageName())) {
+            holder.checked.setChecked(true);
+            Log.i("onBindViewHolder", "is chked"+AdminListAppCustomPers.isGroupAllowedChecked(currentAppInfo.getPackageName()));
+        }else{
+            holder.checked.setChecked(false);
+            Log.i("onBindViewHolder", "is chked"+AdminListAppCustomPers.isGroupAllowedChecked(currentAppInfo.getPackageName()));
+        }
         holder.checked.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (holder.checked.isChecked()) {
-                    AdminHomeActivity.setifNormalUserAllowed(true, currentAppInfo.getPackageName());
+                   // AdminHomeActivity.setifNormalUserAllowed(true, currentAppInfo.getPackageName());
+                    AdminListAppCustomPers.setGrpApps(currentAppInfo.getPackageName(),true);
+                    Toast.makeText(view.getContext(), "Active",Toast.LENGTH_SHORT).show();
                 } else {
-                    AdminHomeActivity.setifNormalUserAllowed(false, currentAppInfo.getPackageName());
+                    AdminListAppCustomPers.setGrpApps(currentAppInfo.getPackageName(),true);
+                    Toast.makeText(view.getContext(), "Desactive",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -67,13 +80,12 @@ public class AdminListAppAdapter extends RecyclerView.Adapter<AdminListAppAdapte
         notifyDataSetChanged();
     }
 
-
-    class AdminViewHolder extends RecyclerView.ViewHolder {
+    public class AdminCustListViewHolder extends RecyclerView.ViewHolder {
         TextView appName, appPackage;
         ImageView appIcon;
         SwitchCompat checked;
 
-        public AdminViewHolder(@NonNull View itemView) {
+        public AdminCustListViewHolder(@NonNull View itemView) {
             super(itemView);
             appName = itemView.findViewById(R.id.nameApp);
             appPackage = itemView.findViewById(R.id.packageName);
@@ -91,17 +103,14 @@ public class AdminListAppAdapter extends RecyclerView.Adapter<AdminListAppAdapte
                 }
             });
         }
+
     }
 
     public interface OnItemClickListener {
         void onItemClick(AppInfo appInfo);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(AdminListAppAdapter.OnItemClickListener listener) {
         this.listener = listener;
     }
-
-
 }
-
-

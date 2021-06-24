@@ -1,5 +1,7 @@
-package com.onblock.myapp.ui.main.view;
+package com.onblock.myapp.ui.main.view.activities;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -45,6 +47,7 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
     private Toast backToast;
 
     public static KioskManager kioskManager;
+    public static Context contextTo;
 
 
     @Override
@@ -53,6 +56,9 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
         setContentView(R.layout.activity_admin_home);
         appListView = findViewById(R.id.appList_view);
 
+        setTitle("Default List Apps ");
+
+        contextTo = this;
 
         adapter = new AdminListAppAdapter();
 
@@ -199,7 +205,7 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
                     appInfoViewModel.insert(newAppInfo);
 
                     AppInfo thisApp = appInfoViewModel.getFromPackage(this.getPackageName());
-                    thisApp.setIsTheContainer(true);
+                  //  thisApp.setIsTheContainer(true);
                     appInfoViewModel.update(thisApp);
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
@@ -255,10 +261,14 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
                     item.setChecked(true);
                     item.setTitle("Disable StatusBar ");
                     Toast.makeText(this, " StatusBar Enable", Toast.LENGTH_SHORT).show();
-                    kioskManager.getmDevicePolicyManager().setStatusBarDisabled(kioskManager.getmAdminComponentName(), false);
+                    if (kioskManager.getmDevicePolicyManager().isDeviceOwnerApp(getPackageName())) {
+                        kioskManager.getmDevicePolicyManager().setStatusBarDisabled(kioskManager.getmAdminComponentName(), false);
+                    }
                 } else {
                     item.setChecked(false);
-                    kioskManager.getmDevicePolicyManager().setStatusBarDisabled(kioskManager.getmAdminComponentName(), true);
+                    if (kioskManager.getmDevicePolicyManager().isDeviceOwnerApp(getPackageName())) {
+                        kioskManager.getmDevicePolicyManager().setStatusBarDisabled(kioskManager.getmAdminComponentName(), true);
+                    }
                     item.setTitle("Enable StatusBar");
                     Toast.makeText(this, "StatusBar Disable", Toast.LENGTH_SHORT).show();
                 }
@@ -276,8 +286,13 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
                 }
 
             case R.id.settings:
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
+                Intent intentSettings = new Intent(this, SettingsActivity.class);
+                startActivity(intentSettings);
+                return true;
+
+            case R.id.menu_grp:
+                Intent intentGroup = new Intent(this, GroupActivity.class);
+                startActivity(intentGroup);
                 return true;
 
             default:
@@ -336,6 +351,14 @@ public class AdminHomeActivity extends AppCompatActivity implements SearchView.O
                 adapter.setApps(appInfos);
             }
         });
+    }
+
+    public static ProgressDialog progressDialogShow() {
+        ProgressDialog progressDialog;
+        progressDialog = new ProgressDialog(contextTo);
+        progressDialog.setMessage("Please Wait..");
+        progressDialog.setCancelable(false);
+        return progressDialog;
     }
 
 }

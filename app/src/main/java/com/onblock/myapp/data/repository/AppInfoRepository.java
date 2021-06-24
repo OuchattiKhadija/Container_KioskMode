@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import com.onblock.myapp.data.AppDb;
 import com.onblock.myapp.data.dao.AppInfoDao;
 import com.onblock.myapp.data.model.AppInfo;
+import com.onblock.myapp.ui.main.view.activities.AdminHomeActivity;
 
 import java.util.List;
 
@@ -16,6 +17,8 @@ public class AppInfoRepository {
     private AppInfoDao appInfoDao;
     private LiveData<List<AppInfo>> allApps;
     private LiveData<List<AppInfo>> allGrantedApps;
+    Application application;
+
 
     public AppInfoRepository(Application application) {
         AppDb database = AppDb.getDatabaseInstance(application);
@@ -84,6 +87,20 @@ public class AppInfoRepository {
 
         private InsertAppAsyncTask(AppInfoDao appInfoDao) {
             this.appInfoDao = appInfoDao;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // display a progress dialog for good user experiance
+
+            //AdminHomeActivity.progressDialogShow().show();
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+          //  AdminHomeActivity.progressDialogShow().dismiss();
         }
 
         @Override
